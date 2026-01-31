@@ -1,0 +1,789 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Garden Incremental Rune Calculator</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        /* Google Fonts */
+        @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@600;800&family=Chakra+Petch:wght@400;500;600;700&display=swap');
+        
+        :root {
+            --bg-color: #0f0505;
+            --panel-bg: rgba(20, 5, 5, 0.95);
+            --border-color: #450a0a;
+            --accent-red: #dc2626;
+        }
+
+        body { 
+            font-family: 'Chakra Petch', sans-serif; 
+            /* Hell Theme Background */
+            background-color: #1a0500; 
+            background-image: 
+                radial-gradient(circle at 50% 0%, #7f1d1d 0%, transparent 60%),
+                radial-gradient(circle at 0% 80%, #450a0a 0%, transparent 40%),
+                radial-gradient(circle at 100% 80%, #450a0a 0%, transparent 40%);
+            color: #ffecd1; 
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+        }
+
+        /* Desktop Layout */
+        @media (min-width: 768px) {
+            body {
+                flex-direction: row;
+                height: 100vh;
+                overflow: hidden;
+            }
+        }
+
+        /* --- Header Text --- */
+        .header-title {
+            font-family: 'Cinzel', serif;
+            background: linear-gradient(to bottom, #86efac 0%, #22c55e 50%, #15803d 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            filter: drop-shadow(0 0 10px rgba(34, 197, 94, 0.4));
+        }
+
+        /* --- Tree Animation --- */
+        .tree-container { position: relative; display: inline-block; }
+        .tree-icon {
+            font-size: 3rem;
+            color: #22c55e;
+            filter: drop-shadow(0 0 15px rgba(34, 197, 94, 0.6));
+            animation: pulse-green 3s infinite ease-in-out;
+            position: relative; z-index: 2;
+        }
+        .fire-base {
+            position: absolute; bottom: 0; left: 50%; transform: translateX(-50%);
+            color: #f97316; opacity: 0.6; font-size: 2rem;
+            animation: burn 2s infinite alternate; pointer-events: none; z-index: 1;
+        }
+        
+        @keyframes pulse-green { 50% { filter: drop-shadow(0 0 20px rgba(34, 197, 94, 0.8)); transform: scale(1.05); } }
+        @keyframes burn { 0% { opacity: 0.3; transform: translateX(-50%) scale(0.9); } 100% { opacity: 0.7; transform: translateX(-50%) scale(1.1); } }
+        
+        /* --- Inputs --- */
+        .input-game {
+            background-color: rgba(0, 0, 0, 0.6);
+            border: 1px solid #7f1d1d;
+            color: #ffedd5;
+            font-family: 'Chakra Petch', sans-serif;
+            border-radius: 6px;
+            transition: 0.3s;
+        }
+        .input-game:focus {
+            border-color: #ef4444;
+            background-color: rgba(20, 0, 0, 0.9);
+            outline: none;
+            box-shadow: 0 0 10px rgba(239, 68, 68, 0.3);
+        }
+
+        /* --- Rune Cards --- */
+        .rune-card {
+            position: relative;
+            background: linear-gradient(160deg, var(--card-dark), var(--card-light));
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-left: 4px solid var(--card-border);
+            transition: transform 0.2s, box-shadow 0.2s;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        .rune-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 25px -5px var(--card-glow);
+            border-color: var(--card-border);
+            z-index: 10;
+        }
+        .card-bg-icon {
+            position: absolute; right: -10px; bottom: -10px; font-size: 4rem;
+            opacity: 0.15; color: white; pointer-events: none; transform: rotate(-15deg);
+        }
+        
+        .stat-badge {
+            background-color: rgba(0,0,0,0.5);
+            border: 1px solid rgba(255,255,255,0.2);
+            color: #ffffff;
+            font-size: 0.65rem;
+            font-weight: 700;
+            padding: 3px 6px;
+            border-radius: 4px;
+            text-transform: uppercase;
+            white-space: nowrap;
+            text-shadow: 0 1px 2px black;
+        }
+
+        /* --- Toggles --- */
+        .toggle-checkbox:checked { right: 0; border-color: #ea580c; }
+        .toggle-checkbox:checked + .toggle-label { background-color: #ea580c; }
+        .toggle-container { position: relative; width: 40px; height: 22px; }
+        .toggle-label { display: block; overflow: hidden; cursor: pointer; border-radius: 99px; background-color: #450a0a; border: 1px solid #7f1d1d; height: 100%; transition: 0.2s; }
+        .toggle-ball { position: absolute; top: 2px; left: 2px; width: 16px; height: 16px; background: #fff; border-radius: 50%; transition: 0.2s; }
+        .toggle-checkbox { display: none; }
+        .toggle-checkbox:checked + .toggle-label .toggle-ball { transform: translateX(18px); }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #1a0500; }
+        ::-webkit-scrollbar-thumb { background: #7f1d1d; border-radius: 3px; }
+        ::-webkit-scrollbar-thumb:hover { background: #991b1b; }
+        
+        /* Sorting Buttons */
+        .btn-sort {
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid #7f1d1d;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: all 0.2s;
+            color: #fca5a5;
+            cursor: pointer;
+        }
+        .btn-sort.active { background: #b91c1c; color: white; border-color: #ef4444; }
+    </style>
+</head>
+<body class="flex flex-col md:flex-row text-orange-50">
+
+    <!-- Sidebar Configuration -->
+    <div class="w-full md:w-[340px] bg-[#140505]/95 backdrop-blur-md border-b md:border-b-0 md:border-r border-[#450a0a] flex flex-col z-30 shrink-0 md:h-screen md:overflow-y-auto transition-all duration-300">
+        <div class="p-6 space-y-6">
+            
+            <!-- Mobile Header Toggle -->
+            <div class="flex items-center justify-between md:hidden">
+                <div class="flex items-center gap-2 text-red-500">
+                    <i class="fas fa-filter"></i>
+                    <span class="text-white font-bold uppercase tracking-wider">Config</span>
+                </div>
+                <button id="toggleConfig" class="text-xs bg-red-900/30 text-red-300 px-3 py-1 rounded border border-red-800">
+                    Hide
+                </button>
+            </div>
+
+            <!-- Config Content -->
+            <div id="configContent" class="space-y-6">
+                <!-- Header (Sidebar) -->
+                <div class="hidden md:flex items-center gap-3 text-red-500 mb-2">
+                    <i class="fas fa-sliders-h text-xl"></i>
+                    <h2 class="text-xl font-bold font-['Cinzel'] tracking-wide text-white">Configuration</h2>
+                </div>
+
+                <!-- Inputs -->
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-red-300/60 text-xs font-bold uppercase tracking-wider mb-1">Cooldown (Speed)</label>
+                        <div class="relative">
+                            <input type="number" id="speed" value="0.15" step="0.01" class="w-full p-2.5 pl-3 input-game font-mono text-lg rounded-lg">
+                            <span class="absolute right-3 top-3 text-xs text-gray-500">sec</span>
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-red-300/60 text-xs font-bold uppercase tracking-wider mb-1">Rune Bulk</label>
+                        <input type="text" id="bulk" class="w-full p-2.5 input-game font-mono text-lg rounded-lg">
+                    </div>
+                    <div>
+                        <label class="block text-red-300/60 text-xs font-bold uppercase tracking-wider mb-1">Rune Luck (×)</label>
+                        <input type="text" id="luck" class="w-full p-2.5 input-game font-mono text-lg rounded-lg pr-8">
+                        <i class="fas fa-sparkles absolute right-3 top-3 text-red-500"></i>
+                    </div>
+                </div>
+
+                <!-- Custom Calc -->
+                <div class="bg-[#1f0a0a] p-4 rounded-xl border border-red-900/40 relative group hover:border-red-700/60 transition-colors">
+                    <div class="absolute top-0 right-0 p-2 opacity-10 group-hover:opacity-20 transition-opacity"><i class="fas fa-calculator text-4xl text-red-500"></i></div>
+                    <div class="flex items-center gap-2 mb-3 text-orange-400">
+                        <i class="fas fa-crosshairs"></i>
+                        <h3 class="text-sm font-bold uppercase tracking-widest">Custom Target</h3>
+                    </div>
+                    <input type="text" id="target" class="w-full p-2 input-game text-sm mb-3 bg-black/40" placeholder="e.g. 3.5QdDe">
+                    <div class="flex justify-between items-end border-t border-red-900/30 pt-2">
+                        <span class="text-[10px] text-gray-500 uppercase font-bold">Time Required</span>
+                        <div id="customEta" class="text-xl font-bold text-yellow-500 font-mono">--</div>
+                    </div>
+                </div>
+
+                <!-- Multipliers -->
+                <div class="bg-[#1a0505] p-3 rounded border border-red-900/50">
+                    <label class="block text-orange-500 text-xs font-bold uppercase tracking-wider mb-3 border-b border-red-900/30 pb-1">Multipliers</label>
+                    
+                    <div class="space-y-4">
+                        <!-- Potions -->
+                        <div>
+                            <div class="text-[11px] text-[#ca8a04] font-bold uppercase mb-2 tracking-widest">Potions (2x)</div>
+                            <div class="space-y-2">
+                                <div class="flex justify-between items-center">
+                                    <span class="text-xs text-red-100 font-medium">Speed (2x)</span>
+                                    <div class="toggle-container"><input type="checkbox" id="speed2x" class="toggle-checkbox"><label for="speed2x" class="toggle-label"><span class="toggle-ball"></span></label></div>
+                                </div>
+                                <div class="flex justify-between items-center">
+                                    <span class="text-xs text-red-100 font-medium">Luck (2x)</span>
+                                    <div class="toggle-container"><input type="checkbox" id="luck2x" class="toggle-checkbox"><label for="luck2x" class="toggle-label"><span class="toggle-ball"></span></label></div>
+                                </div>
+                                <div class="flex justify-between items-center">
+                                    <span class="text-xs text-red-100 font-medium">Bulk (2x)</span>
+                                    <div class="toggle-container"><input type="checkbox" id="bulk2x" class="toggle-checkbox"><label for="bulk2x" class="toggle-label"><span class="toggle-ball"></span></label></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Blackhole -->
+                        <div>
+                            <div class="text-[11px] text-[#a855f7] font-bold uppercase mb-2 tracking-widest flex items-center gap-1"><i class="fas fa-circle text-[6px]"></i> Blackhole (10x)</div>
+                            <div class="space-y-2">
+                                <div class="flex justify-between items-center">
+                                    <span class="text-xs text-red-100 font-medium">Speed (2x)</span>
+                                    <div class="toggle-container"><input type="checkbox" id="bhSpeed" class="toggle-checkbox"><label for="bhSpeed" class="toggle-label"><span class="toggle-ball"></span></label></div>
+                                </div>
+                                <div class="flex justify-between items-center">
+                                    <span class="text-xs text-red-100 font-medium">Luck (10x)</span>
+                                    <div class="toggle-container"><input type="checkbox" id="bhLuck" class="toggle-checkbox"><label for="bhLuck" class="toggle-label"><span class="toggle-ball"></span></label></div>
+                                </div>
+                                <div class="flex justify-between items-center">
+                                    <span class="text-xs text-red-100 font-medium">Bulk (2x)</span>
+                                    <div class="toggle-container"><input type="checkbox" id="bhBulk" class="toggle-checkbox"><label for="bhBulk" class="toggle-label"><span class="toggle-ball"></span></label></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="flex-1 p-4 md:p-10 h-auto md:h-screen md:overflow-y-auto bg-gradient-to-br from-[#0f0505] to-[#1a0500] flex flex-col">
+        
+        <!-- Header -->
+        <div class="flex flex-col xl:flex-row justify-between items-start xl:items-end mb-6 gap-6 border-b border-red-900/30 pb-4">
+            <div class="flex items-center gap-4">
+                <div class="tree-container">
+                    <i class="fas fa-tree tree-icon"></i>
+                    <div class="fire-base"><i class="fas fa-fire"></i></div>
+                </div>
+                <div>
+                    <!-- Green Fire Text Title -->
+                    <h1 class="text-2xl md:text-5xl font-black header-title leading-none mb-1">Garden Incremental<br><span class="text-white text-xl md:text-3xl font-bold tracking-widest font-['Chakra_Petch'] uppercase">Rune Calculator</span></h1>
+                </div>
+            </div>
+            
+            <div class="w-full md:w-auto bg-black/60 backdrop-blur border border-red-800 rounded-xl p-4 flex items-center gap-4 shadow-lg min-w-[200px]">
+                <div class="bg-red-900/30 p-3 rounded-lg border border-red-700">
+                    <i class="fas fa-bolt text-yellow-500 text-xl md:text-2xl animate-pulse"></i>
+                </div>
+                <div>
+                    <div class="text-[10px] text-red-400 font-bold uppercase tracking-wider mb-0.5">Effective RPS</div>
+                    <div id="effectiveRPS" class="text-xl md:text-2xl font-bold text-white font-mono leading-none">0</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Search Area -->
+        <div class="flex flex-col md:flex-row gap-3 mb-6 sticky top-0 md:static z-20 bg-[#0f0505] md:bg-transparent p-2 md:p-0 rounded-lg">
+            <div class="relative flex-1">
+                <i class="fas fa-search absolute left-4 top-3.5 text-red-500/50"></i>
+                <input type="text" id="runeSearch" placeholder="Search for runes (e.g. 'Frost', 'Common')..." class="w-full bg-[#140505] border border-red-900/30 text-white rounded-lg py-3 pl-11 pr-4 focus:border-red-500 focus:bg-[#1a0808] transition-all outline-none">
+            </div>
+            <div class="flex gap-2 shrink-0">
+                <!-- Swapped Order: All Runes First, Chance Second -->
+                <button id="sortEta" class="btn-sort w-24 justify-center">All Runes</button>
+                <button id="sortChance" class="btn-sort active w-32 justify-center">Chance <i class="fas fa-sort-amount-up ml-2" id="iconChance"></i></button>
+            </div>
+        </div>
+
+        <!-- Grid (1 Column Mobile, Multi Desktop) -->
+        <div id="runesGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-3 md:gap-5 pb-20"></div>
+
+        <!-- Empty State -->
+        <div id="noResults" class="hidden flex-col items-center justify-center py-20 text-red-900/50">
+            <i class="fas fa-dungeon text-6xl mb-4"></i>
+            <h3 class="text-xl font-bold uppercase">No Runes Discovered</h3>
+        </div>
+
+    </div>
+
+    <script>
+        // --- 1. GLOBAL VARIABLES & HELPERS ---
+        window.currentSort = { key: 'chance', order: 'asc' };
+
+        const suffixes = [
+            { val: 1e3, sym: 'k' }, { val: 1e6, sym: 'm' }, { val: 1e9, sym: 'b' }, { val: 1e12, sym: 't' },
+            { val: 1e15, sym: 'qd' }, { val: 1e18, sym: 'qn' }, { val: 1e21, sym: 'sx' }, { val: 1e24, sym: 'sp' },
+            { val: 1e27, sym: 'oc' }, { val: 1e30, sym: 'no' }, 
+            { val: 1e33, sym: 'de' }, { val: 1e33, sym: 'dc' }, 
+            { val: 1e36, sym: 'ud' }, { val: 1e36, sym: 'ude' }, 
+            { val: 1e39, sym: 'dd' }, { val: 1e39, sym: 'dde' }, 
+            { val: 1e42, sym: 'td' }, { val: 1e42, sym: 'tde' }, 
+            { val: 1e45, sym: 'qdde' }, { val: 1e48, sym: 'qnde' }, { val: 1e51, sym: 'sxde' }
+        ];
+
+        function parseValue(str) {
+            if (!str) return 0;
+            str = str.toString().toLowerCase().trim();
+            if (str.includes('/')) str = str.split('/')[1]; 
+            const sortedSuffixes = [...suffixes].sort((a, b) => b.sym.length - a.sym.length);
+            for (let s of sortedSuffixes) {
+                if (str.endsWith(s.sym)) {
+                    return parseFloat(str.slice(0, -s.sym.length)) * s.val;
+                }
+            }
+            return parseFloat(str) || 0;
+        }
+
+        function formatValue(num) {
+            if (num === 0) return "0";
+            if (num < 1000) return num.toFixed(2).replace(/\.00$/, '');
+            for (let i = suffixes.length - 1; i >= 0; i--) {
+                if (num >= suffixes[i].val) {
+                    return (num / suffixes[i].val).toFixed(2).replace(/\.00$/, '') + suffixes[i].sym.charAt(0).toUpperCase() + suffixes[i].sym.slice(1);
+                }
+            }
+            return num.toExponential(2);
+        }
+
+        function formatTime(seconds) {
+            if (!isFinite(seconds) || seconds <= 0) return "--";
+            if (seconds < 0.01) return "< 0.01s";
+            if (seconds < 60) return seconds.toFixed(2) + "s";
+            let minutes = Math.floor(seconds / 60);
+            let remainingSeconds = Math.floor(seconds % 60); 
+            if (minutes < 60) return `${minutes}m ${remainingSeconds}s`;
+            let hours = Math.floor(minutes / 60);
+            let remainingMinutes = minutes % 60;
+            if (hours < 24) return `${hours}h ${remainingMinutes}m`;
+            let days = Math.floor(hours / 24);
+            let remainingHours = hours % 24;
+            if (days < 365) return `${days}d ${remainingHours}h`;
+            let years = Math.floor(days / 365);
+            let remainingDays = days % 365;
+            return `${years}y ${remainingDays}d`;
+        }
+
+        function getCardStyle(type) {
+            if(type.includes("Basic")) return ["#1f2937", "#374151", "#6b7280", "fa-leaf"];
+            if(type.includes("Frost")) return ["#0e7490", "#155e75", "#22d3ee", "fa-snowflake"];
+            if(type.includes("Sun")) return ["#854d0e", "#a16207", "#facc15", "fa-sun"];
+            if(type.includes("Tunnel")) return ["#431407", "#7c2d12", "#fb923c", "fa-dungeon"];
+            if(type.includes("Cavern")) return ["#115e59", "#0f766e", "#2dd4bf", "fa-archway"];
+            if(type.includes("Lantern")) return ["#991b1b", "#7f1d1d", "#fca5a5", "fa-lightbulb"];
+            if(type.includes("Energy")) return ["#a16207", "#ca8a04", "#fef08a", "fa-bolt"];
+            if(type.includes("Wave")) return ["#1e3a8a", "#1e40af", "#60a5fa", "fa-water"];
+            if(type.includes("Capstone")) return ["#831843", "#be185d", "#f472b6", "fa-crown"];
+            if(type.includes("Astryx")) return ["#4c1d95", "#6d28d9", "#a78bfa", "fa-meteor"];
+            if(type.includes("Vornel")) return ["#7f1d1d", "#991b1b", "#ef4444", "fa-atom"];
+            if(type.includes("Starlight")) return ["#713f12", "#ca8a04", "#fde047", "fa-star"];
+            if(type.includes("Heavenly")) return ["#0e7490", "#0891b2", "#67e8f9", "fa-feather-alt"];
+            if(type.includes("Damnation")) return ["#450a0a", "#7f1d1d", "#f87171", "fa-skull-crossbones"];
+            return ["#1f2937", "#374151", "#6b7280", "fa-question"];
+        }
+
+        // --- Rune Data ---
+        const runeData = [
+            // Basic
+            { name: "Common", type: "Basic Rune", chance: "1.54", raw: "1.54", stats: ["x0.01 Seeds"] },
+            { name: "Uncommon", type: "Basic Rune", chance: "4", raw: "4", stats: ["x0.025 Seeds"] },
+            { name: "Rare", type: "Basic Rune", chance: "10", raw: "10", stats: ["x0.065 Seeds", "x0.005 Plants"] },
+            { name: "Epic", type: "Basic Rune", chance: "100", raw: "100", stats: ["x0.7 Seeds", "x0.025 Plants"] },
+            { name: "Legendary", type: "Basic Rune", chance: "50k", raw: "50k", stats: ["x10 Seeds", "x0.5 Plants", "x0.25 Logs", "x0.2 Leafs"] },
+            { name: "Mythic", type: "Basic Rune", chance: "1m", raw: "1m", stats: ["x50 Seeds", "x3 Plants", "x1 Logs", "x1 Leafs"] },
+            { name: "Secret", type: "Basic Rune", chance: "15m", raw: "15m", stats: ["x10 Plants", "x5 Logs", "x5 Leafs", "x0.05 Rune Luck (x0.25 Max)"] },
+            { name: "Garden Tree", type: "Basic Rune", chance: "10Qn", raw: "10Qn", stats: ["x0.01 Rune Luck (x0.1 Max)", "+5 Rune Bulk (+100 Max)", "x50 Apples", "x50M Seeds"] },
+            { name: "Garden Artifact", type: "Basic Rune", chance: "10Oc", raw: "10Oc", stats: ["+500 Rune Bulk (+35k Max)", "x0.02 Rune Luck (0.5x Max)", "x2Qd Boss Shards", "x2Qn Boss Damage"] },
+            { name: "The Secret Garden", type: "Basic Rune", chance: "5TDe", raw: "5TDe", stats: ["+7.5M Rune Bulk [MAX]", "x3 Rune Luck [MAX]", "+150M Tier Bulk [MAX]", "x2 Tickets [MAX]"] },
+
+            // Frost
+            { name: "Cold", type: "Frost Rune", chance: "1.54", raw: "1.54", stats: ["x0.001 Leafs"] },
+            { name: "Igloo", type: "Frost Rune", chance: "4.44", raw: "4.44", stats: ["x0.0005 Snow"] },
+            { name: "Snowboard", type: "Frost Rune", chance: "8", raw: "8", stats: ["x0.0025 Snow"] },
+            { name: "Snowstorm", type: "Frost Rune", chance: "1k", raw: "1k", stats: ["x0.25 Snow", "x0.05 Ice"] },
+            { name: "Snowdemon", type: "Frost Rune", chance: "100k", raw: "100k", stats: ["x3 Snow", "x0.5 Ice", "x0.02 Boss Damage"] },
+            { name: "Yeti", type: "Frost Rune", chance: "5m", raw: "5m", stats: ["x7 Snow", "x1.5 Ice", "x0.1 Boss Shards", "x0.2 Boss Damage"] },
+            { name: "Ice Dragon", type: "Frost Rune", chance: "25m", raw: "25m", stats: ["x25 Snow", "x5 Ice", "x15 Leafs", "x0.1 Tier Luck (Max x2)"] },
+            { name: "Ragnarok", type: "Frost Rune", chance: "500m", raw: "500m", stats: ["x150 Snow", "+1 Passive Shards (+1 max)", "x1.5 Boss Shards", "x0.25 Rune Luck (x1.5 max)"] },
+            { name: "Frozen Core", type: "Frost Rune", chance: "17.5Qn", raw: "17.5Qn", stats: ["x25 Tier Luck (x250 max)", "+20 Tier Bulk (+200 max)", "+1 Passive Shards (+4 max)", "x100m Boss Damage"] },
+            { name: "Subzero", type: "Frost Rune", chance: "450Ude", raw: "450Ude", stats: ["+20k Rune Bulk (+5m max)", "x0.01 Rune Luck (x2 max)", "x0.03 Tier Bulk (x7.5 max)", "x2.5M Tier Luck (x100b max)"] },
+
+            // Sun
+            { name: "Aridic", type: "Sun Rune", chance: "1.54", raw: "1.54", stats: ["x0.0001 Points"] },
+            { name: "Mirage", type: "Sun Rune", chance: "4.44", raw: "4.44", stats: ["x0.00005 Sand"] },
+            { name: "Dunebound", type: "Sun Rune", chance: "8", raw: "8", stats: ["x0.00025 Sand"] },
+            { name: "Scorched", type: "Sun Rune", chance: "500k", raw: "500k", stats: ["x0.0025 Points", "x0.005 Sand"] },
+            { name: "Desolate", type: "Sun Rune", chance: "25m", raw: "25m", stats: ["x0.075 Points", "x0.25 Sand", "x0.02 Fossils"] },
+            { name: "Cacti", type: "Sun Rune", chance: "100m", raw: "100m", stats: ["x0.15 Points", "x2.5 Sand", "x0.1 Fossils", "x0.02 Oil"] },
+            { name: "Oasis", type: "Sun Rune", chance: "1b", raw: "1b", stats: ["x7.5 Sand", "x2.5 Fossils", "x1 Better Points (x1 max)", "x0.2 Oil"] },
+            { name: "Sun God", type: "Sun Rune", chance: "50b", raw: "50b", stats: ["x5 Oil", "x2 Better Points (x10 max)", "x5 Tier Luck (x20 max)", "x0.5 Rune Luck (x2 max)"] },
+            { name: "Temple God", type: "Sun Rune", chance: "25Qn", raw: "25Qn", stats: ["x0.02 Rune Luck (x0.2 max)", "+25 Rune Bulk (+500 max)", "x5 Tier Luck (x75 max)", "+25 Tier Bulk (+250 max)"] },
+
+            // Tunnel
+            { name: "Glimmer", type: "Tunnel Rune", chance: "1.25", raw: "1.25", stats: ["x0.0000025 Stone"] },
+            { name: "Hollow", type: "Tunnel Rune", chance: "6.67", raw: "6.67", stats: ["x0.000005 Coal"] },
+            { name: "Lumen", type: "Tunnel Rune", chance: "25", raw: "25", stats: ["x0.000015 Clay"] },
+            { name: "Vault", type: "Tunnel Rune", chance: "200", raw: "200", stats: ["x0.0001 Limestone"] },
+            { name: "Ironveil", type: "Tunnel Rune", chance: "2.5m", raw: "2.5m", stats: ["x0.00001 Granite"] },
+            { name: "Abyssal", type: "Tunnel Rune", chance: "25B", raw: "25B", stats: ["x0.075 Sandstone", "x0.005 Cash"] },
+            { name: "Eclipse", type: "Tunnel Rune", chance: "100B", raw: "100B", stats: ["x0.25 Iron", "x0.1 Copper", "x0.1 Dust", "+2 Rune Bulk (+10 max)"] },
+            { name: "Eternis", type: "Tunnel Rune", chance: "1T", raw: "1T", stats: ["3x Tin", "1x Salt", "5x Tier Luck (20x max)", "x0.05 Rune Luck (x0.25 max)"] },
+            { name: "Eternal Gateway", type: "Tunnel Rune", chance: "35Qn", raw: "35Qn", stats: ["x0.02 Rune Luck (x0.25 max)", "+5 Rune Bulk (+100 max)", "x2.5 Tier Luck (x50 max)", "+5 Tier Bulk (+150 max)"] },
+            { name: "Unstable Gateway", type: "Tunnel Rune", chance: "5No", raw: "5No", stats: ["x25k Bramite", "x10k Ardenite", "x0.02 Rune Luck (x0.5 max)", "+1k Rune Bulk (+100k max)"] },
+
+            // Cavern
+            { name: "Drift", type: "Cavern Rune", chance: "1.18", raw: "1.18", stats: ["x0.0000025 Zinc"] },
+            { name: "Chasm", type: "Cavern Rune", chance: "8", raw: "8", stats: ["x0.000005 Lead"] },
+            { name: "Grotto", type: "Cavern Rune", chance: "50", raw: "50", stats: ["x0.000015 Nickel"] },
+            { name: "Echoes", type: "Cavern Rune", chance: "400", raw: "400", stats: ["x0.0001 Cobalt"] },
+            { name: "Stoneveil", type: "Cavern Rune", chance: "25m", raw: "25m", stats: ["x0.00001 Aluminum"] },
+            { name: "Netherdeep", type: "Cavern Rune", chance: "100B", raw: "100B", stats: ["x0.075 Silver", "x0.01 Cash"] },
+            { name: "Oblivion", type: "Cavern Rune", chance: "1T", raw: "1T", stats: ["x0.25 Manganese", "x0.1 Uranium", "x0.25 Dust", "+4 Rune Bulk (+20 max)"] },
+            { name: "Voidspire", type: "Cavern Rune", chance: "10t", raw: "10t", stats: ["x3 Titanium", "x1 Chromium", "x10 Tier Luck (x50 max)", "x0.1 Rune Luck (x0.5 max)"] },
+            { name: "Deepest Depths", type: "Cavern Rune", chance: "55Qn", raw: "55Qn", stats: ["x0.02 Rune Luck (x0.3 max)", "+10 Rune Bulk (+150 max)", "x10 Tier Luck (x150 max)", "x50k Lead"] },
+            { name: "Darkest Depths", type: "Cavern Rune", chance: "10No", raw: "10No", stats: ["x5k Graphite", "x2.5k Flamerite", "x0.02 Rune Luck (x0.5 max)", "+2k Rune Bulk (+200k max)"] },
+
+            // Lantern
+            { name: "Glow", type: "Lantern Rune", chance: "1.11", raw: "1.11", stats: ["x0.0000025 Gold"] },
+            { name: "Flicker", type: "Lantern Rune", chance: "13.3", raw: "13.3", stats: ["x0.000005 Platinum"] },
+            { name: "Beacon", type: "Lantern Rune", chance: "44.4", raw: "44.4", stats: ["x0.000015 Palladium"] },
+            { name: "Radiant", type: "Lantern Rune", chance: "1k", raw: "1k", stats: ["x0.0001 Emerald"] },
+            { name: "Lightveil", type: "Lantern Rune", chance: "1B", raw: "1B", stats: ["x0.0003 Sapphire"] },
+            { name: "Solflare", type: "Lantern Rune", chance: "1T", raw: "1T", stats: ["x0.075 Ruby", "x0.025 Cash"] },
+            { name: "Luminaris", type: "Lantern Rune", chance: "5T", raw: "5T", stats: ["x0.25 Diamond", "x0.1 Obsidian", "x0.5 Dust", "+5 Rune Bulk (+30 max)"] },
+            { name: "Eclipsion", type: "Lantern Rune", chance: "50T", raw: "50T", stats: ["x3 Mythril", "x1 Adamantite", "x10 Tier Luck (x75 max)", "0.15x Rune luck (0.75x max)"] },
+            { name: "Starlight Sun", type: "Lantern Rune", chance: "75Qn", raw: "75Qn", stats: ["x0.04 Rune Luck (x0.4 max)", "+15 Rune Bulk (+150 max)", "+10 Tier Bulk (+200 max)", "x5k Emerald"] },
+            { name: "Supernova Star", type: "Lantern Rune", chance: "25No", raw: "25No", stats: ["x1k Netherite", "x0.001 Ore Multiplier (x25 max)", "x0.03 Rune Luck (x0.75 max)", "+2.5k Rune Bulk (+350k max)"] },
+
+            // Energy
+            { name: "Sparix", type: "Energy Rune", chance: "1.09", raw: "1.09", stats: ["x0.00000375 Energy"] },
+            { name: "Eneris", type: "Energy Rune", chance: "20", raw: "20", stats: ["x0.0000375 Energy"] },
+            { name: "Voltryn", type: "Energy Rune", chance: "50", raw: "50", stats: ["x0.00009 Power"] },
+            { name: "Dynara", type: "Energy Rune", chance: "1k", raw: "1k", stats: ["x0.0018 Energy", "x0.002 Power"] },
+            { name: "Arkanix", type: "Energy Rune", chance: "25B", raw: "25B", stats: ["x0.0005 Power", "x0.000015 Charge", "x0.000002 Tech Points (x50 max)"] },
+            { name: "Fluxion", type: "Energy Rune", chance: "75T", raw: "75T", stats: ["x1.25 Power", "x0.06 Charge", "x0.005 Tech Points (x50 max)"] },
+            { name: "Luxen", type: "Energy Rune", chance: "1Qd", raw: "1Qd", stats: ["x12 Power", "x0.8 Charge", "x0.1 Circuits", "x0.2 Tech Points (x50 max)"] },
+            { name: "Radiyn", type: "Energy Rune", chance: "75Qd", raw: "75Qd", stats: ["x500 Power", "x2.5 Circuits", "x5 Tier Luck (x75 max)", "x0.1 Rune Luck (x0.5 max)"] },
+            { name: "Omnion", type: "Energy Rune", chance: "5Qn", raw: "5Qn", stats: ["x50000 Power", "x250 Circuits", "+25 Rune Bulk (+200 max)", "x0.15 Rune Luck (x0.75 max)"] },
+            { name: "Onion", type: "Energy Rune", chance: "15Qn", raw: "15Qn", stats: ["x0.5 Tech Points", "x0.25 Cores", "+50 Rune Bulk (+250 max)", "x0.1 Rune Bulk (x0.5 max)"] },
+            { name: "Nexus Entity", type: "Energy Rune", chance: "125Qn", raw: "125Qn", stats: ["x0.05 Rune Luck (x0.5 MAX)", "+20 Rune Bulk (+500 MAX)", "x20 Tier Luck (x300 MAX)", "+25 Tier Bulk (+500 MAX)"] },
+            { name: "Cybernetic Secrets", type: "Energy Rune", chance: "2.5TDe", raw: "2.5TDe", stats: ["x5 Rune Luck [MAX]", "+10M Rune Bulk [MAX]", "x25 Tier Bulk [MAX]", "x5.7Oc Cores"] },
+
+            // Waves
+            { name: "Nai", type: "Wave Rune", chance: "1.02", raw: "1.02", stats: ["x0.000000002 Common Fish"] },
+            { name: "Rill", type: "Wave Rune", chance: "50.8", raw: "50.8", stats: ["x0.00000005 Common Fish"] },
+            { name: "Maru", type: "Wave Rune", chance: "3.33k", raw: "3.33k", stats: ["x0.00003 Common Fish"] },
+            { name: "Vash", type: "Wave Rune", chance: "5m", raw: "5m", stats: ["x0.001 Uncommon Fish"] },
+            { name: "Selyn", type: "Wave Rune", chance: "5Qn", raw: "5Qn", stats: ["x0.06 Uncommon Fish", "x0.015 Rare Fish"] },
+            { name: "Korren", type: "Wave Rune", chance: "100Qn", raw: "100Qn", stats: ["x0.1 Uncommon Fish", "x0.02 Rare Fish", "x0.004 Epic Fish", "+5 Rune Bulk (+2.5k max)"] },
+            { name: "Pelara", type: "Wave Rune", chance: "2.5Sx", raw: "2.5Sx", stats: ["x0.5 Rare Fish", "x0.1 Epic Fish", "x0.015 Coins", "+10 Rune Bulk (+5k max)"] },
+            { name: "Thaln", type: "Wave Rune", chance: "30Sx", raw: "30Sx", stats: ["x1 Epic Fish", "x0.1 Legendary Fish", "x0.05 Pearls", "x20 Tier Luck (x500 max)"] },
+            { name: "Abyen", type: "Wave Rune", chance: "750Sx", raw: "750Sx", stats: ["x30 Epic Fish", "x1.75 Legendary Fish", "x3 Coins", "x0.010 Rune Luck (x0.25 max)"] },
+            { name: "Levath", type: "Wave Rune", chance: "20Sp", raw: "20Sp", stats: ["x60 Legendary Fish", "x150 Coins", "x0.05 Pearls", "x50 Pearls", "x0.02 Rune Luck (x0.5 max)"] },
+            { name: "Maerion", type: "Wave Rune", chance: "1.5Oc", raw: "1.5Oc", stats: ["x0.05 Rune Luck (x1.5 max)", "+250 Rune Bulk (+50k max)", "x50 Tier Luck (x3k max)", "+75 Tier Bulk (+4.5k max)"] },
+            { name: "The Deepest Sea", type: "Wave Rune", chance: "20Oc", raw: "20Oc", stats: ["x0.05 Rune Luck (x1 max)", "+500 Rune Bulk (+25k max)", "x75 Tier Luck (x4.5k max)", "x5 Mythical Fish"] },
+            { name: "The Darkest Sea", type: "Wave Rune", chance: "750Ude", raw: "750Ude", stats: ["x0.005 Fisher XP (x100 max)", "x5Qd Legendary Fish", "x500b Mythical Fish", "x0.001 Multi Fish (x2.5 max)"] },
+
+            // Capstone
+            { name: "Myrt", type: "Capstone Rune", chance: "1", raw: "1", stats: ["x0.00000000000004 Fungus"] },
+            { name: "Spyrn", type: "Capstone Rune", chance: "500", raw: "500", stats: ["x0.000000000001 Fungus"] },
+            { name: "Glisq", type: "Capstone Rune", chance: "1m", raw: "1m", stats: ["x0.000000002 Fungus"] },
+            { name: "Thryl", type: "Capstone Rune", chance: "5B", raw: "5B", stats: ["x0.000012 Fungus"] },
+            { name: "Micraun", type: "Capstone Rune", chance: "30Sp", raw: "30Sp", stats: ["x0.005 Fungus"] },
+            { name: "Faeclot", type: "Capstone Rune", chance: "600Sp", raw: "600Sp", stats: ["x0.1 Fungus", "x0.02 Spores"] },
+            { name: "Brumelle", type: "Capstone Rune", chance: "15Oc", raw: "15Oc", stats: ["x2.5 Fungus", "x0.5 Spores", "x0.1 Glowy Crystals", "+250 Rune Bulk (+100k max)"] },
+            { name: "Cytherin", type: "Capstone Rune", chance: "200Oc", raw: "200Oc", stats: ["x50 Fungus", "x6 Spores", "x1.5 Glowy Crystals", "+500 Rune Bulk (+150k max)"] },
+            { name: "Mycoshard", type: "Capstone Rune", chance: "1.5No", raw: "1.5No", stats: ["x50 Spores", "x15 Glowy Crystals", "x0.05 Magic Energy", "x0.005 Rune Luck (x0.5 max)"] },
+            { name: "Sporethane", type: "Capstone Rune", chance: "25No", raw: "25No", stats: ["x1k Spores", "x350 Glowy Crystals", "x1.5 Magic Energy", "x0.01 Rune Luck (x1.25 max)"] },
+            { name: "Echomycra", type: "Capstone Rune", chance: "500No", raw: "500No", stats: ["+5000 Rune Bulk (+1m max)", "x0.02 Rune Luck (x3 max)", "x0.01 Tier Bulk (x1.25 max)", "x500 Tier Luck (x100k max)"] },
+
+            // Astryx
+            { name: "Dustfall", type: "Astryx Rune", chance: "1", raw: "1", stats: ["x0.00000000000000015 Dirtite"] },
+            { name: "Meteorite", type: "Astryx Rune", chance: "200k", raw: "200k", stats: ["x0.00000000000015 Dirtite", "x0.00000000000025 Moonlite"] },
+            { name: "Cometborn", type: "Astryx Rune", chance: "1t", raw: "1t", stats: ["x0.000075 Dirtite", "x0.0000125 Moonlite", "x0.000003 Marsite"] },
+            { name: "Cryostone", type: "Astryx Rune", chance: "5No", raw: "5No", stats: ["x1 Dirtite", "x0.15 Moonlite", "x0.04 Marsite", "x0.01 Venusite"] },
+            { name: "Lunaris", type: "Astryx Rune", chance: "75No", raw: "75No", stats: ["x2.5 Moonlite", "x0.6 Marsite", "x0.15 Venusite", "+100 Rune Bulk (+500k max)"] },
+            { name: "Auralite", type: "Astryx Rune", chance: "1De", raw: "1De", stats: ["x19 Matsite", "x2.5 Venusite", "x0.5 Mercuryte", "x1k Tier Luck (x250k max)"] },
+            { name: "Nebulite", type: "Astryx Rune", chance: "25De", raw: "25De", stats: ["x15 Mercuryte", "x2 Jupiterite", "+7.5k Rune Bulk (+1.5m max)", "x0.01 Rune Luck (x2.5 max)"] },
+
+            // Vornel
+            { name: "Orbitfall", type: "Vornel Rune", chance: "1", raw: "1", stats: ["x0.000000000000015 Dirite", "x0.000000000000075 Moonlite"] },
+            { name: "Galaxium", type: "Vornel Rune", chance: "500k", raw: "500k", stats: ["x0.00005 Dirite", "x0.0000002 Moonlite", "x0.0000000025 Marsite"] },
+            { name: "Nova Spark", type: "Vornel Rune", chance: "100b", raw: "100b", stats: ["x10 Dirite", "x0.04 Moonlite", "x0.0005 Marsite", "x0.00002 Venusite"] },
+            { name: "Horizon", type: "Vornel Rune", chance: "25Qd", raw: "25Qd", stats: ["x12.5k Moonlite", "x150 Marsite", "x7.5 Venusite", "x0.3 Mercuryte"] },
+            { name: "Quasarlight", type: "Vornel Rune", chance: "350No", raw: "350No", stats: ["x1m Moonlite", "x15k Marsite", "x750 Venusite", "x100 Mercuryte"] },
+            { name: "Voidcore", type: "Vornel Rune", chance: "1.25De", raw: "1.25De", stats: ["x3k Venusite", "x500 Mercuryte", "x2.5 Jupiterite", "+500 Rune Bulk (+250k max)"] },
+            { name: "Darkmatter", type: "Vornel Rune", chance: "5De", raw: "5De", stats: ["x15k Venusite", "x2k Mercuryte", "x25 Jupiterite", "+500 Rune Bulk (+250k max)"] },
+            { name: "Hypercore", type: "Vornel Rune", chance: "25De", raw: "25De", stats: ["x10k Mercuryte", "x150 Jupiterite", "x0.75 Saturnite", "+750 Rune Bulk (+375k max)"] },
+            { name: "Astral Crown", type: "Vornel Rune", chance: "100De", raw: "100De", stats: ["x750 Jupiterite", "x4.5 Saturnite", "x0.03 Uranite", "x0.005 Rune Luck (x0.75 max)"] },
+            { name: "Black Hole", type: "Vornel Rune", chance: "150De", raw: "150De", stats: ["x1.2Oc Venusite", "x110Sx Mercuryte", "x15.9Qn Jupiterite", "x5.98Qd Saturnite"] },
+            { name: "Celestium", type: "Vornel Rune", chance: "500De", raw: "500De", stats: ["x0.25 Uranite", "x0.005 Cosmic Points", "x0.001 Light Points", "x0.01 Rune Luck (x1.5 max)"] },
+            { name: "Eternal Eclipse", type: "Vornel Rune", chance: "10Ude", raw: "10Ude", stats: ["x25k Tier Luck (x10b max)", "x0.02 Tier Bulk (x5 max)", "+20k Rune Bulk (+5m max)", "x0.02 Rune Luck (x5 max)"] },
+
+            // Starlight
+            { name: "Wormhole", type: "Starlight Rune", chance: "1", raw: "1", stats: ["x150t Dirtite", "x22.5m Moonlite", "x37.5 Marsite"] },
+            { name: "Sunlight", type: "Starlight Rune", chance: "1m", raw: "1m", stats: ["x100Qn Dirtite", "x13.5t Moonlite", "x21.5m Marsite", "x200 Venusite"] },
+            { name: "Universal", type: "Starlight Rune", chance: "1t", raw: "1t", stats: ["x100Sp Dirtite", "x13.5Qn Moonlite", "x21.5t Marsite", "x200m Venusite"] },
+            { name: "Alien", type: "Starlight Rune", chance: "250qd", raw: "250qd", stats: ["x5Sp Moonlite", "x8Qn Marsite", "x80t Venusite", "x9b Mercuryte"] },
+            { name: "Lightyear", type: "Starlight Rune", chance: "10De", raw: "10De", stats: ["x2Qn Marsite", "x18.5t Venusite", "x1.75b Mercuryte", "x250k Jupiterite"] },
+            { name: "Ultranova", type: "Starlight Rune", chance: "2.5Ude", raw: "2.5Ude", stats: ["x500b Mercuryte", "x70m Jupiterite", "x25k Saturnite", "x25 Uranite"] },
+            { name: "Neutron Star", type: "Starlight Rune", chance: "35Ude", raw: "35Ude", stats: ["x1b Jupiterite", "x350k Saturnite", "x350 Uranite", "x0.35 Neptunite"] },
+            { name: "Intergalactic", type: "Starlight Rune", chance: "500Ude", raw: "500Ude", stats: ["x5m Saturnite", "x5k Uranite", "x5 Neptunite", "x0.0005 Plutite"] },
+            { name: "The Unknown", type: "Starlight Rune", chance: "25Dde", raw: "25Dde", stats: ["x500 Neptunite", "x0.05 Plutite", "x200 Light Points", "x1k Cosmic Points"] },
+
+            // Heavenly
+            { name: "Faded", type: "Heavenly Rune", chance: "1", raw: "1", stats: ["x0.000000000000000000000000000000005 Grace"] },
+            { name: "Blesed", type: "Heavenly Rune", chance: "1/2m", raw: "2m", stats: ["x0.0000000000000000525 Grace"] },
+            { name: "Hallowed", type: "Heavenly Rune", chance: "1/4t", raw: "4t", stats: ["x0.0000000011 Grace"] },
+            { name: "Radiantly", type: "Heavenly Rune", chance: "1/7.5Qn", raw: "7.5Qn", stats: ["x0.0335 Grace"] },
+            { name: "Anglelic", type: "Heavenly Rune", chance: "1/75Ude", raw: "75Ude", stats: ["x1.5 Grace"] },
+            { name: "Seraphic", type: "Heavenly Rune", chance: "1/600Ude", raw: "600Ude", stats: ["x12.5 Grace", "x0.5 Glory"] },
+            { name: "Empyrean", type: "Heavenly Rune", chance: "1/5DDe", raw: "5Dde", stats: ["x111 Grace", "x4.26 Glory", "x0.175 Divinity"] },
+            { name: "Celestial", type: "Heavenly Rune", chance: "1/42.5DDe", raw: "42.5Dde", stats: ["x37.5 Glory", "x1.5 Divinity", "x0.45 Heaven Points"] },
+            { name: "Ascended", type: "Heavenly Rune", chance: "1/350DDe", raw: "350Dde", stats: ["x350 Glory", "x13.5 Divinity", "x5 Heaven Points", "x0.01 Rune Luck"] },
+            { name: "Absolute Divinity", type: "Heavenly Rune", chance: "1/10TDe", raw: "10Tde", stats: ["x2.5b Tier Luck", "x0.1 Tier Bulk", "x0.03 Rune Luck", "+80k Rune Bulk"] },
+
+            // Damnation
+            { name: "Ashbound", type: "Damnation Rune", chance: "1", raw: "1", stats: ["x0.00000000000000000000000000000002 Ember"] },
+            { name: "Sootmarked", type: "Damnation Rune", chance: "1/10m", raw: "10m", stats: ["x0.00000000000000000005 Ember"] },
+            { name: "Cinderbrand", type: "Damnation Rune", chance: "1/100t", raw: "100t", stats: ["x0.00000000000005 Ember"] },
+            { name: "Pitforged", type: "Damnation Rune", chance: "1/1sx", raw: "1sx", stats: ["x0.000008 Ember"] },
+            { name: "Sinwrought", type: "Damnation Rune", chance: "1/1TDe", raw: "1tde", stats: ["x0.0001 Ember"] },
+            { name: "Bloodcrowned", type: "Damnation Rune", chance: "1/15TDe", raw: "15tde", stats: ["x0.0015 Ember", "x0.0002 Madness"] },
+            { name: "Netherbound", type: "Damnation Rune", chance: "1/225TDe", raw: "225tde", stats: ["x0.024 Ember", "x0.003 Madness", "x0.0006 Hell XP"] },
+            { name: "Hell Anointed", type: "Damnation Rune", chance: "1/3.5QdDe", raw: "3.5qdde", stats: ["x0.05 Madness", "x0.01 Hell XP", "x0.001 Sins", "+1k Rune Bulk"] },
+            { name: "Doom Sovereign", type: "Damnation Rune", chance: "1/55QdDe", raw: "55qdde", stats: ["x0.8 Madness", "x0.16 Hell XP", "x0.016 Sins", "+5k Rune Bulk"] },
+            { name: "Archfiend Ascended", type: "Damnation Rune", chance: "1/750QdDe", raw: "750qdde", stats: ["x12.5 Madness", "x2.5 Hell XP", "x0.25 Sins", "x0.001 Rune Luck"] },
+            { name: "Cataclysm Unbound", type: "Damnation Rune", chance: "1/20QnDe", raw: "20qnde", stats: ["x10T Tier Luck", "x0.5 Tier Bulk", "x0.025 Rune Luck", "+200k Rune Bulk"] }
+        ];
+
+        window.calculate = function() {
+            const speedEl = document.getElementById('speed');
+            const bulkEl = document.getElementById('bulk');
+            const luckEl = document.getElementById('luck');
+            const targetEl = document.getElementById('target');
+            
+            if(!speedEl || !bulkEl || !luckEl || !targetEl) return;
+
+            let speedInput = parseFloat(speedEl.value);
+            let bulk = parseValue(bulkEl.value);
+            let luck = parseValue(luckEl.value);
+            const target = parseValue(targetEl.value);
+
+            const speed2xEl = document.getElementById('speed2x');
+            const speed10xEl = document.getElementById('speed10x');
+            const luck2xEl = document.getElementById('luck2x');
+            const luck10xEl = document.getElementById('luck10x');
+            const bhSpeedEl = document.getElementById('bhSpeed');
+            const bhLuckEl = document.getElementById('bhLuck');
+            const bhBulkEl = document.getElementById('bhBulk');
+            const bulk2xEl = document.getElementById('bulk2x');
+
+            const speed2x = speed2xEl ? speed2xEl.checked : false;
+            const speed10x = speed10xEl ? speed10xEl.checked : false;
+            const luck2x = luck2xEl ? luck2xEl.checked : false;
+            const luck10x = luck10xEl ? luck10xEl.checked : false;
+            const bhSpeed = bhSpeedEl ? bhSpeedEl.checked : false;
+            const bhLuck = bhLuckEl ? bhLuckEl.checked : false;
+            const bhBulk = bhBulkEl ? bhBulkEl.checked : false;
+            const bulk2x = bulk2xEl ? bulk2xEl.checked : false;
+
+            let finalSpeed = speedInput;
+            if (speed2x) finalSpeed /= 2;
+            if (bhSpeed) finalSpeed /= 2; // Black hole gives 2x speed (which means cooldown / 2)
+            
+            let finalLuck = luck;
+            if (luck2x) finalLuck *= 2;
+            if (bhLuck) finalLuck *= 10;
+
+            if (bhBulk) bulk *= 2;
+            if (bulk2x) bulk *= 2;
+
+            if (finalSpeed <= 0) finalSpeed = 0.001; 
+
+            const effectiveRPS = bulk / finalSpeed;
+            const effRPS = document.getElementById('effectiveRPS');
+            if(effRPS) effRPS.innerText = formatValue(effectiveRPS);
+
+            const totalPower = effectiveRPS * finalLuck;
+
+            const etaElement = document.getElementById('customEta');
+            if(etaElement){
+                if (totalPower > 0 && target > 0) {
+                    const sec = target / totalPower;
+                    etaElement.innerText = formatTime(sec);
+                    if (sec > 604800) { etaElement.className = "text-xl font-bold text-red-500 font-mono drop-shadow-md"; }
+                    else if (sec >= 86400) { etaElement.className = "text-xl font-bold text-red-400 font-mono drop-shadow-md"; }
+                    else if (sec >= 3600) { etaElement.className = "text-xl font-bold text-orange-400 font-mono drop-shadow-md"; }
+                    else { etaElement.className = "text-xl font-bold text-green-400 font-mono drop-shadow-md"; }
+                } else { 
+                    etaElement.innerText = "--"; 
+                }
+            }
+            
+            renderRunes(totalPower);
+        };
+
+        window.updateSort = function(key) {
+            if (window.currentSort.key === key) {
+                if (key === 'chance') {
+                    window.currentSort.order = window.currentSort.order === 'asc' ? 'desc' : 'asc';
+                }
+            } else {
+                window.currentSort.key = key;
+                window.currentSort.order = 'asc'; 
+            }
+            
+            const chanceBtn = document.getElementById('sortChance');
+            const etaBtn = document.getElementById('sortEta');
+            
+            if (key === 'chance') {
+                if(chanceBtn) chanceBtn.classList.add('active');
+                if(etaBtn) etaBtn.classList.remove('active');
+                const icon = document.getElementById('iconChance');
+                if(icon) icon.className = window.currentSort.order === 'asc' ? 'fas fa-sort-amount-up ml-2' : 'fas fa-sort-amount-down ml-2';
+            } else {
+                if(etaBtn) etaBtn.classList.add('active');
+                if(chanceBtn) chanceBtn.classList.remove('active');
+            }
+            
+            window.calculate();
+        };
+
+        function renderRunes(totalPower) {
+            const grid = document.getElementById('runesGrid');
+            if(!grid) return;
+            
+            const searchInput = document.getElementById('runeSearch');
+            const searchTerm = searchInput ? searchInput.value.toLowerCase() : '';
+            
+            let filtered = runeData.filter(rune => 
+                rune.name.toLowerCase().includes(searchTerm) || 
+                rune.type.toLowerCase().includes(searchTerm)
+            );
+            
+            filtered.sort((a, b) => {
+                const valA = parseValue(a.raw);
+                const valB = parseValue(b.raw);
+                
+                if (window.currentSort.key === 'chance') {
+                    return window.currentSort.order === 'asc' ? valA - valB : valB - valA;
+                } else {
+                    return valA - valB; 
+                }
+            });
+            
+            const resultCount = document.getElementById('resultCount');
+            if(resultCount) resultCount.innerText = `${filtered.length} Runes`;
+            
+            const noResults = document.getElementById('noResults');
+            if(noResults) {
+                if(filtered.length > 0) noResults.classList.add('hidden');
+                else noResults.classList.remove('hidden');
+            }
+            
+            grid.innerHTML = '';
+            filtered.forEach(rune => {
+                const runeValue = parseValue(rune.raw);
+                const sec = totalPower > 0 ? runeValue / totalPower : 0;
+                let eta = "--"; let colorClass = "text-gray-400";
+                
+                if (totalPower > 0) {
+                    eta = formatTime(sec);
+                    if (sec > 604800) colorClass = "text-red-500 font-bold";
+                    else if (sec >= 86400) colorClass = "text-red-400 font-bold";
+                    else if (sec >= 3600) colorClass = "text-orange-400 font-bold";
+                    else colorClass = "text-green-400 font-bold";
+                }
+                
+                const cardStyle = getCardStyle(rune.type);
+                const [darkColor, lightColor, borderColor, iconClass] = cardStyle;
+
+                const card = document.createElement('div');
+                card.className = `rune-card rounded p-4 flex flex-col justify-between h-full`;
+                card.style.setProperty('--card-dark', darkColor);
+                card.style.setProperty('--card-light', lightColor);
+                card.style.setProperty('--card-border', borderColor);
+                card.style.setProperty('--card-glow', borderColor);
+                
+                if (rune.type.includes("Damnation")) {
+                   card.style.background = `linear-gradient(160deg, #450a0a, #7f1d1d)`; 
+                }
+
+                card.onclick = () => { 
+                    const t = document.getElementById('target');
+                    if(t) { t.value = rune.raw; window.calculate(); }
+                };
+                
+                let statsHtml = (rune.stats || []).map(s => `<span class="stat-badge">${s}</span>`).join('');
+                let cleanChance = rune.chance.toString().replace('1/', '');
+                
+                card.innerHTML = `
+                    <div class="mb-4 relative z-10">
+                        <div class="flex justify-between items-start mb-1">
+                            <h3 class="text-xl font-bold text-white tracking-wide truncate drop-shadow-md" title="${rune.name}">${rune.name}</h3>
+                            <i class="fas fa-external-link-alt text-xs text-white opacity-0 group-hover:opacity-100 transition-opacity"></i>
+                        </div>
+                        <div class="text-[10px] font-bold uppercase tracking-widest mb-3 flex items-center gap-1.5 text-white/90">
+                             <i class="fas ${iconClass}"></i> ${rune.type}
+                        </div>
+                        
+                        <div class="grid grid-cols-2 gap-2 text-sm border-t border-white/20 pt-3">
+                            <div><div class="text-[9px] text-white/70 uppercase font-bold tracking-wider mb-0.5">Chance</div><div class="font-mono text-white text-shadow-sm">1 in ${cleanChance}</div></div>
+                            <div class="text-right"><div class="text-[9px] text-white/70 uppercase font-bold tracking-wider mb-0.5">ETA</div><div class="font-mono ${colorClass} drop-shadow-md text-white font-bold" style="text-shadow: 0 0 5px rgba(0,0,0,0.8)">${eta}</div></div>
+                        </div>
+                        <i class="fas ${iconClass} card-bg-icon"></i>
+                    </div>
+                    <div class="flex flex-wrap gap-1.5 mt-auto pt-3 border-t border-white/20 relative z-10">
+                        ${statsHtml}
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        // --- Initialization ---
+        document.addEventListener('DOMContentLoaded', () => {
+            const toggleBtn = document.getElementById('toggleConfig');
+            const configContent = document.getElementById('configContent');
+            let isConfigVisible = true;
+
+            if(toggleBtn){
+                toggleBtn.addEventListener('click', () => {
+                    isConfigVisible = !isConfigVisible;
+                    if (isConfigVisible) {
+                        configContent.classList.remove('hidden');
+                        toggleBtn.innerHTML = 'Hide';
+                    } else {
+                        configContent.classList.add('hidden');
+                        toggleBtn.innerHTML = 'Show';
+                    }
+                });
+            }
+
+            // Init listeners
+            ['speed', 'bulk', 'luck', 'target', 'runeSearch'].forEach(id => {
+                const el = document.getElementById(id);
+                if(el) el.addEventListener('input', window.calculate);
+            });
+            // Update IDs for listeners including bulk2x
+            ['speed2x', 'luck2x', 'bulk2x', 'bhSpeed', 'bhLuck', 'bhBulk'].forEach(id => {
+                const el = document.getElementById(id);
+                if(el) el.addEventListener('change', window.calculate);
+            });
+            
+            document.getElementById('sortChance').addEventListener('click', () => window.updateSort('chance'));
+            document.getElementById('sortEta').addEventListener('click', () => window.updateSort('eta'));
+
+            window.calculate();
+        });
+    </script>
+</body>
+</html>
