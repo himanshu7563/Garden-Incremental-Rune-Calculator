@@ -200,7 +200,7 @@
                     </div>
                 </div>
 
-                <!-- Custom Calc (Swapped Position) -->
+                <!-- Custom Calc -->
                 <div class="bg-[#1f0a0a] p-4 rounded-xl border border-red-900/40 relative group hover:border-red-700/60 transition-colors">
                     <div class="absolute top-0 right-0 p-2 opacity-10 group-hover:opacity-20 transition-opacity"><i class="fas fa-calculator text-4xl text-red-500"></i></div>
                     <div class="flex items-center gap-2 mb-3 text-orange-400">
@@ -234,7 +234,7 @@
                             </div>
                         </div>
 
-                        <!-- Blackhole (Name Updated) -->
+                        <!-- Blackhole -->
                         <div>
                             <div class="text-[11px] text-[#a855f7] font-bold uppercase mb-2 tracking-widest flex items-center gap-1"><i class="fas fa-circle text-[6px]"></i> Blackhole Event</div>
                             <div class="space-y-2">
@@ -606,15 +606,14 @@
             const bhLuck = bhLuckEl ? bhLuckEl.checked : false;
 
             let finalSpeed = speedInput;
-            if (speed2x) finalSpeed /= 2;
-            if (bhSpeed) finalSpeed /= 2; 
+            
+            // Apply Speed multiplier to Bulk as requested
+            if (speed2x) bulk *= 2;
+            if (bhSpeed) bulk *= 2; 
             
             let finalLuck = luck;
             if (luck2x) finalLuck *= 2;
             if (bhLuck) finalLuck *= 10;
-
-            if (speed2x) bulk *= 2;
-            if (bhSpeed) bulk *= 2; 
 
             if (finalSpeed <= 0) finalSpeed = 0.001; 
 
@@ -806,4 +805,3 @@
     </script>
 </body>
 </html>
-
