@@ -563,6 +563,7 @@
             { name: "Celestial", type: "Heavenly Rune", chance: "1/42.5DDe", raw: "42.5Dde", stats: ["x37.5 Glory", "x1.5 Divinity", "x0.45 Heaven Points"] },
             { name: "Ascended", type: "Heavenly Rune", chance: "1/350DDe", raw: "350Dde", stats: ["x350 Glory", "x13.5 Divinity", "x5 Heaven Points", "x0.01 Rune Luck"] },
             { name: "Absolute Divinity", type: "Heavenly Rune", chance: "1/10TDe", raw: "10Tde", stats: ["x2.5b Tier Luck (x2.5Qd Max)", "x0.1 Tier Bulk (x25 Max)", "x0.03 Rune Luck (x7.5 Max)", "+80k Rune Bulk (+20M Max)"] },
+            { name: "Astral Divinity", type: "Heavenly Rune", chance: "1/350QnDe", raw: "350qnde", stats: ["x20T Tier Luck (x100Qd Max)", "x0.002 Rune Luck (x10 Max)", "x0.0001 Heavenly Luck (x0.5 Max)", "x0.02 Heavenly Bulk (x10 Max)"] },
 
             // Damnation
             { name: "Ashbound", type: "Damnation Rune", chance: "1", raw: "1", stats: ["x0.00000000000000000000000000000002 Ember"] },
@@ -592,16 +593,12 @@
             const target = parseValue(targetEl.value);
 
             const speed2xEl = document.getElementById('speed2x');
-            const speed10xEl = document.getElementById('speed10x');
             const luck2xEl = document.getElementById('luck2x');
-            const luck10xEl = document.getElementById('luck10x');
             const bhSpeedEl = document.getElementById('bhSpeed');
             const bhLuckEl = document.getElementById('bhLuck');
 
             const speed2x = speed2xEl ? speed2xEl.checked : false;
-            const speed10x = speed10xEl ? speed10xEl.checked : false;
             const luck2x = luck2xEl ? luck2xEl.checked : false;
-            const luck10x = luck10xEl ? luck10xEl.checked : false;
             const bhSpeed = bhSpeedEl ? bhSpeedEl.checked : false;
             const bhLuck = bhLuckEl ? bhLuckEl.checked : false;
 
@@ -791,7 +788,6 @@
                 const el = document.getElementById(id);
                 if(el) el.addEventListener('input', window.calculate);
             });
-            // Update IDs for listeners excluding bulk2x/potBulk (removed from HTML)
             ['speed2x', 'luck2x', 'bhSpeed', 'bhLuck'].forEach(id => {
                 const el = document.getElementById(id);
                 if(el) el.addEventListener('change', window.calculate);
