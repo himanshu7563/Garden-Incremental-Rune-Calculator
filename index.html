@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Garden Incremental Rune Calculator</title>
+    <title>Garden Incremental - Rune Calculator</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Font Awesome -->
@@ -13,21 +13,22 @@
         @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@600;800&family=Chakra+Petch:wght@400;500;600;700&display=swap');
         
         :root {
-            --bg-color: #0f0505;
-            --panel-bg: rgba(20, 5, 5, 0.95);
-            --border-color: #450a0a;
-            --accent-red: #dc2626;
+            --bg-color: #1a0510;
+            --panel-bg: rgba(25, 5, 15, 0.95);
+            --border-color: #831843;
+            --accent-pink: #db2777;
+            --accent-soft: #f472b6;
         }
 
         body { 
             font-family: 'Chakra Petch', sans-serif; 
-            /* Hell Theme Background */
-            background-color: #1a0500; 
+            /* Valentine Theme Background */
+            background-color: #1a0510; 
             background-image: 
-                radial-gradient(circle at 50% 0%, #7f1d1d 0%, transparent 60%),
-                radial-gradient(circle at 0% 80%, #450a0a 0%, transparent 40%),
-                radial-gradient(circle at 100% 80%, #450a0a 0%, transparent 40%);
-            color: #ffecd1; 
+                radial-gradient(circle at 50% 0%, #9d174d 0%, transparent 60%),
+                radial-gradient(circle at 0% 80%, #701a75 0%, transparent 40%),
+                radial-gradient(circle at 100% 80%, #701a75 0%, transparent 40%);
+            color: #fdf2f8; 
             min-height: 100vh;
             display: flex;
             flex-direction: column;
@@ -46,44 +47,44 @@
         /* --- Header Text --- */
         .header-title {
             font-family: 'Cinzel', serif;
-            background: linear-gradient(to bottom, #86efac 0%, #22c55e 50%, #15803d 100%);
+            background: linear-gradient(to bottom, #fce7f3 0%, #f472b6 50%, #db2777 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            filter: drop-shadow(0 0 10px rgba(34, 197, 94, 0.4));
+            filter: drop-shadow(0 0 10px rgba(219, 39, 119, 0.4));
         }
 
         /* --- Tree Animation --- */
         .tree-container { position: relative; display: inline-block; }
         .tree-icon {
             font-size: 3rem;
-            color: #22c55e;
-            filter: drop-shadow(0 0 15px rgba(34, 197, 94, 0.6));
-            animation: pulse-green 3s infinite ease-in-out;
+            color: #f472b6;
+            filter: drop-shadow(0 0 15px rgba(244, 114, 182, 0.6));
+            animation: pulse-pink 3s infinite ease-in-out;
             position: relative; z-index: 2;
         }
         .fire-base {
             position: absolute; bottom: 0; left: 50%; transform: translateX(-50%);
-            color: #f97316; opacity: 0.6; font-size: 2rem;
+            color: #ec4899; opacity: 0.6; font-size: 2rem;
             animation: burn 2s infinite alternate; pointer-events: none; z-index: 1;
         }
         
-        @keyframes pulse-green { 50% { filter: drop-shadow(0 0 20px rgba(34, 197, 94, 0.8)); transform: scale(1.05); } }
-        @keyframes burn { 0% { opacity: 0.3; transform: translateX(-50%) scale(0.9); } 100% { opacity: 0.7; transform: translateX(-50%) scale(1.1); } }
+        @keyframes pulse-pink { 50% { filter: drop-shadow(0 0 25px rgba(219, 39, 119, 0.8)); transform: scale(1.05); color: #fdf2f8; } }
+        @keyframes burn { 0% { opacity: 0.3; transform: translateX(-50%) scale(0.9); } 100% { opacity: 0.7; transform: translateX(-50%) scale(1.2); } }
         
         /* --- Inputs --- */
         .input-game {
             background-color: rgba(0, 0, 0, 0.6);
-            border: 1px solid #7f1d1d;
-            color: #ffedd5;
+            border: 1px solid #831843;
+            color: #fdf2f8;
             font-family: 'Chakra Petch', sans-serif;
             border-radius: 6px;
             transition: 0.3s;
         }
         .input-game:focus {
-            border-color: #ef4444;
-            background-color: rgba(20, 0, 0, 0.9);
+            border-color: #db2777;
+            background-color: rgba(30, 0, 15, 0.9);
             outline: none;
-            box-shadow: 0 0 10px rgba(239, 68, 68, 0.3);
+            box-shadow: 0 0 10px rgba(219, 39, 119, 0.3);
         }
 
         /* --- Rune Cards --- */
@@ -123,24 +124,24 @@
         }
 
         /* --- Toggles --- */
-        .toggle-checkbox:checked { right: 0; border-color: #ea580c; }
-        .toggle-checkbox:checked + .toggle-label { background-color: #ea580c; }
+        .toggle-checkbox:checked { right: 0; border-color: #db2777; }
+        .toggle-checkbox:checked + .toggle-label { background-color: #db2777; }
         .toggle-container { position: relative; width: 40px; height: 22px; }
-        .toggle-label { display: block; overflow: hidden; cursor: pointer; border-radius: 99px; background-color: #450a0a; border: 1px solid #7f1d1d; height: 100%; transition: 0.2s; }
+        .toggle-label { display: block; overflow: hidden; cursor: pointer; border-radius: 99px; background-color: #500724; border: 1px solid #831843; height: 100%; transition: 0.2s; }
         .toggle-ball { position: absolute; top: 2px; left: 2px; width: 16px; height: 16px; background: #fff; border-radius: 50%; transition: 0.2s; }
         .toggle-checkbox { display: none; }
         .toggle-checkbox:checked + .toggle-label .toggle-ball { transform: translateX(18px); }
 
         /* Scrollbar */
         ::-webkit-scrollbar { width: 6px; }
-        ::-webkit-scrollbar-track { background: #1a0500; }
-        ::-webkit-scrollbar-thumb { background: #7f1d1d; border-radius: 3px; }
-        ::-webkit-scrollbar-thumb:hover { background: #991b1b; }
+        ::-webkit-scrollbar-track { background: #1a0510; }
+        ::-webkit-scrollbar-thumb { background: #831843; border-radius: 3px; }
+        ::-webkit-scrollbar-thumb:hover { background: #be185d; }
         
         /* Sorting Buttons */
         .btn-sort {
             background: rgba(0, 0, 0, 0.5);
-            border: 1px solid #7f1d1d;
+            border: 1px solid #831843;
             padding: 8px 16px;
             border-radius: 6px;
             font-size: 0.85rem;
@@ -150,85 +151,85 @@
             justify-content: center;
             gap: 8px;
             transition: all 0.2s;
-            color: #fca5a5;
+            color: #fbcfe8;
             cursor: pointer;
         }
-        .btn-sort.active { background: #b91c1c; color: white; border-color: #ef4444; }
+        .btn-sort.active { background: #be185d; color: white; border-color: #f472b6; }
     </style>
 </head>
-<body class="flex flex-col md:flex-row text-orange-50">
+<body class="flex flex-col md:flex-row text-pink-50">
 
     <!-- Sidebar Configuration -->
-    <div class="w-full md:w-[340px] bg-[#140505]/95 backdrop-blur-md border-b md:border-b-0 md:border-r border-[#450a0a] flex flex-col z-30 shrink-0 md:h-screen md:overflow-y-auto transition-all duration-300">
+    <div class="w-full md:w-[340px] bg-[#1a0510]/95 backdrop-blur-md border-b md:border-b-0 md:border-r border-[#831843] flex flex-col z-30 shrink-0 md:h-screen md:overflow-y-auto transition-all duration-300">
         <div class="p-6 space-y-6">
             
             <!-- Mobile Header Toggle -->
             <div class="flex items-center justify-between md:hidden">
-                <div class="flex items-center gap-2 text-red-500">
-                    <i class="fas fa-filter"></i>
-                    <span class="text-white font-bold uppercase tracking-wider">Config</span>
+                <div class="flex items-center gap-2 text-pink-500">
+                    <i class="fas fa-heart"></i>
+                    <span class="text-white font-bold uppercase tracking-wider">Valentine Config</span>
                 </div>
-                <button id="toggleConfig" class="text-xs bg-red-900/30 text-red-300 px-3 py-1 rounded border border-red-800">
+                <button id="toggleConfig" class="text-xs bg-pink-900/30 text-pink-300 px-3 py-1 rounded border border-pink-800">
                     Hide
                 </button>
             </div>
 
             <!-- Config Content -->
             <div id="configContent" class="space-y-6">
-                <div class="hidden md:flex items-center gap-3 text-red-500 mb-2">
-                    <i class="fas fa-sliders-h text-xl"></i>
+                <div class="hidden md:flex items-center gap-3 text-pink-400 mb-2">
+                    <i class="fas fa-heart-pulse text-xl"></i>
                     <h2 class="text-xl font-bold font-['Cinzel'] tracking-wide text-white">Configuration</h2>
                 </div>
 
                 <!-- Inputs -->
                 <div class="space-y-4">
                     <div>
-                        <label class="block text-red-300/60 text-xs font-bold uppercase tracking-wider mb-1">Cooldown (Speed)</label>
+                        <label class="block text-pink-300/60 text-xs font-bold uppercase tracking-wider mb-1">Cooldown (Speed)</label>
                         <div class="relative">
                             <input type="number" id="speed" value="0.15" step="0.01" class="w-full p-2.5 pl-3 input-game font-mono text-lg rounded-lg">
                             <span class="absolute right-3 top-3 text-xs text-gray-500">sec</span>
                         </div>
                     </div>
                     <div>
-                        <label class="block text-red-300/60 text-xs font-bold uppercase tracking-wider mb-1">Rune Bulk</label>
+                        <label class="block text-pink-300/60 text-xs font-bold uppercase tracking-wider mb-1">Rune Bulk</label>
                         <input type="text" id="bulk" class="w-full p-2.5 input-game font-mono text-lg rounded-lg">
                     </div>
                     <div>
-                        <label class="block text-red-300/60 text-xs font-bold uppercase tracking-wider mb-1">Rune Luck (×)</label>
+                        <label class="block text-pink-300/60 text-xs font-bold uppercase tracking-wider mb-1">Rune Luck (×)</label>
                         <input type="text" id="luck" class="w-full p-2.5 input-game font-mono text-lg rounded-lg pr-8">
-                        <i class="fas fa-sparkles absolute right-3 top-3 text-red-500"></i>
+                        <i class="fas fa-sparkles absolute right-3 top-3 text-pink-500"></i>
                     </div>
                 </div>
 
                 <!-- Custom Calc -->
-                <div class="bg-[#1f0a0a] p-4 rounded-xl border border-red-900/40 relative group hover:border-red-700/60 transition-colors">
-                    <div class="absolute top-0 right-0 p-2 opacity-10 group-hover:opacity-20 transition-opacity"><i class="fas fa-calculator text-4xl text-red-500"></i></div>
-                    <div class="flex items-center gap-2 mb-3 text-orange-400">
+                <div class="bg-[#2d0b1a] p-4 rounded-xl border border-pink-900/40 relative group hover:border-pink-700/60 transition-colors">
+                    <div class="absolute top-0 right-0 p-2 opacity-10 group-hover:opacity-20 transition-opacity"><i class="fas fa-calculator text-4xl text-pink-500"></i></div>
+                    <div class="flex items-center gap-2 mb-3 text-pink-300">
                         <i class="fas fa-crosshairs"></i>
                         <h3 class="text-sm font-bold uppercase tracking-widest">Custom Target</h3>
                     </div>
                     <input type="text" id="target" class="w-full p-2 input-game text-sm mb-3 bg-black/40" placeholder="e.g. 3.5QdDe">
-                    <div class="flex justify-between items-end border-t border-red-900/30 pt-2">
+                    <div class="flex justify-between items-end border-t border-pink-900/30 pt-2">
                         <span class="text-[10px] text-gray-500 uppercase font-bold">Time Required</span>
-                        <div id="customEta" class="text-xl font-bold text-yellow-500 font-mono">--</div>
+                        <div id="customEta" class="text-xl font-bold text-pink-400 font-mono">--</div>
                     </div>
                 </div>
 
                 <!-- Multipliers -->
-                <div class="bg-[#1a0505] p-3 rounded border border-red-900/50">
-                    <label class="block text-orange-500 text-xs font-bold uppercase tracking-wider mb-3 border-b border-red-900/30 pb-1">Multipliers</label>
+                <div class="bg-[#250510] p-3 rounded border border-pink-900/50">
+                    <label class="block text-pink-400 text-xs font-bold uppercase tracking-wider mb-3 border-b border-pink-900/30 pb-1">Multipliers</label>
                     
                     <div class="space-y-4">
                         <!-- Potions -->
                         <div>
-                            <div class="text-[11px] text-[#ca8a04] font-bold uppercase mb-2 tracking-widest">Potions (2x)</div>
+                            <div class="text-[11px] text-[#fb7185] font-bold uppercase mb-2 tracking-widest">Potions (2x)</div>
                             <div class="space-y-2">
                                 <div class="flex justify-between items-center">
-                                    <span class="text-xs text-red-100 font-medium">Speed (2x)</span>
+                                    <span class="text-xs text-pink-100 font-medium">Speed (2x)</span>
                                     <div class="toggle-container"><input type="checkbox" id="speed2x" class="toggle-checkbox"><label for="speed2x" class="toggle-label"><span class="toggle-ball"></span></label></div>
                                 </div>
                                 <div class="flex justify-between items-center">
-                                    <span class="text-xs text-red-100 font-medium">Luck (2x)</span>
+                                    <span class="text-xs text-pink-100 font-medium">Luck (2x)</span>
                                     <div class="toggle-container"><input type="checkbox" id="luck2x" class="toggle-checkbox"><label for="luck2x" class="toggle-label"><span class="toggle-ball"></span></label></div>
                                 </div>
                             </div>
@@ -236,14 +237,14 @@
 
                         <!-- Blackhole -->
                         <div>
-                            <div class="text-[11px] text-[#a855f7] font-bold uppercase mb-2 tracking-widest flex items-center gap-1"><i class="fas fa-circle text-[6px]"></i> Blackhole Event</div>
+                            <div class="text-[11px] text-[#d946ef] font-bold uppercase mb-2 tracking-widest flex items-center gap-1"><i class="fas fa-circle text-[6px]"></i> Blackhole Event</div>
                             <div class="space-y-2">
                                 <div class="flex justify-between items-center">
-                                    <span class="text-xs text-red-100 font-medium">Speed (2x)</span>
+                                    <span class="text-xs text-pink-100 font-medium">Speed (2x)</span>
                                     <div class="toggle-container"><input type="checkbox" id="bhSpeed" class="toggle-checkbox"><label for="bhSpeed" class="toggle-label"><span class="toggle-ball"></span></label></div>
                                 </div>
                                 <div class="flex justify-between items-center">
-                                    <span class="text-xs text-red-100 font-medium">Luck (10x)</span>
+                                    <span class="text-xs text-pink-100 font-medium">Luck (10x)</span>
                                     <div class="toggle-container"><input type="checkbox" id="bhLuck" class="toggle-checkbox"><label for="bhLuck" class="toggle-label"><span class="toggle-ball"></span></label></div>
                                 </div>
                             </div>
@@ -255,41 +256,41 @@
     </div>
 
     <!-- Main Content -->
-    <div class="flex-1 p-4 md:p-10 h-auto md:h-screen md:overflow-y-auto bg-gradient-to-br from-[#0f0505] to-[#1a0500] flex flex-col">
+    <div class="flex-1 p-4 md:p-10 h-auto md:h-screen md:overflow-y-auto bg-gradient-to-br from-[#1a0510] to-[#2d051a] flex flex-col">
         
         <!-- Header -->
-        <div class="flex flex-col xl:flex-row justify-between items-start xl:items-end mb-6 gap-6 border-b border-red-900/30 pb-4">
+        <div class="flex flex-col xl:flex-row justify-between items-start xl:items-end mb-6 gap-6 border-b border-pink-900/30 pb-4">
             <div class="flex items-center gap-4">
                 <div class="tree-container">
                     <i class="fas fa-tree tree-icon"></i>
-                    <div class="fire-base"><i class="fas fa-fire"></i></div>
+                    <div class="fire-base"><i class="fas fa-heart"></i></div>
                 </div>
                 <div>
-                    <!-- Green Fire Text Title -->
+                    <!-- Header Title -->
                     <h1 class="text-2xl md:text-5xl font-black header-title leading-none mb-1">Garden Incremental<br><span class="text-white text-xl md:text-3xl font-bold tracking-widest font-['Chakra_Petch'] uppercase">Rune Calculator</span></h1>
                 </div>
             </div>
             
-            <div class="w-full md:w-auto bg-black/60 backdrop-blur border border-red-800 rounded-xl p-4 flex items-center gap-4 shadow-lg min-w-[200px]">
-                <div class="bg-red-900/30 p-3 rounded-lg border border-red-700">
-                    <i class="fas fa-bolt text-yellow-500 text-xl md:text-2xl animate-pulse"></i>
+            <div class="w-full md:w-auto bg-black/60 backdrop-blur border border-pink-800 rounded-xl p-4 flex items-center gap-4 shadow-lg min-w-[200px]">
+                <div class="bg-pink-900/30 p-3 rounded-lg border border-pink-700">
+                    <i class="fas fa-bolt text-pink-400 text-xl md:text-2xl animate-pulse"></i>
                 </div>
                 <div>
-                    <div class="text-[10px] text-red-400 font-bold uppercase tracking-wider mb-0.5">Effective RPS</div>
+                    <div class="text-[10px] text-pink-300 font-bold uppercase tracking-wider mb-0.5">Effective RPS</div>
                     <div id="effectiveRPS" class="text-xl md:text-2xl font-bold text-white font-mono leading-none">0</div>
                 </div>
             </div>
         </div>
 
         <!-- Search Area -->
-        <div class="flex flex-col md:flex-row gap-3 mb-6 sticky top-0 md:static z-20 bg-[#0f0505] md:bg-transparent p-2 md:p-0 rounded-lg">
+        <div class="flex flex-col md:flex-row gap-3 mb-6 sticky top-0 md:static z-20 bg-[#1a0510] md:bg-transparent p-2 md:p-0 rounded-lg">
             <div class="relative flex-1">
-                <i class="fas fa-search absolute left-4 top-3.5 text-red-500/50"></i>
-                <input type="text" id="runeSearch" placeholder="Search for runes (e.g. 'Frost', 'Common')..." class="w-full bg-[#140505] border border-red-900/30 text-white rounded-lg py-3 pl-11 pr-4 focus:border-red-500 focus:bg-[#1a0808] transition-all outline-none">
+                <i class="fas fa-search absolute left-4 top-3.5 text-pink-500/50"></i>
+                <input type="text" id="runeSearch" placeholder="Search for runes (e.g. 'Bloom', 'Midnight')..." class="w-full bg-[#250510] border border-pink-900/30 text-white rounded-lg py-3 pl-11 pr-4 focus:border-pink-500 focus:bg-[#350818] transition-all outline-none">
             </div>
             
             <div class="flex flex-wrap items-center gap-2 shrink-0 justify-center md:justify-end">
-                <span id="resultCount" class="text-xs font-bold text-red-400 bg-black/40 border border-red-900/30 px-3 py-2 rounded whitespace-nowrap">Total Rune: 0</span>
+                <span id="resultCount" class="text-xs font-bold text-pink-300 bg-black/40 border border-pink-900/30 px-3 py-2 rounded whitespace-nowrap">Total Rune: 0</span>
                 <button id="sortEta" class="btn-sort w-24 justify-center">All Runes</button>
                 <button id="sortChance" class="btn-sort active w-32 justify-center">Chance <i class="fas fa-sort-amount-up ml-2" id="iconChance"></i></button>
             </div>
@@ -298,8 +299,8 @@
         <!-- Grid -->
         <div id="runesGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-3 md:gap-5 pb-20"></div>
 
-        <div id="noResults" class="hidden flex-col items-center justify-center py-20 text-red-900/50">
-            <i class="fas fa-dungeon text-6xl mb-4"></i>
+        <div id="noResults" class="hidden flex-col items-center justify-center py-20 text-pink-900/50">
+            <i class="fas fa-heart-broken text-6xl mb-4"></i>
             <h3 class="text-xl font-bold uppercase">No Runes Discovered</h3>
         </div>
 
@@ -458,7 +459,7 @@
             { name: "Lightveil", type: "Lantern Rune", chance: "1B", raw: "1B", stats: ["x0.0003 Sapphire"] },
             { name: "Solflare", type: "Lantern Rune", chance: "1T", raw: "1T", stats: ["x0.075 Ruby", "x0.025 Cash"] },
             { name: "Luminaris", type: "Lantern Rune", chance: "5T", raw: "5T", stats: ["x0.25 Diamond", "x0.1 Obsidian", "x0.5 Dust", "+5 Rune Bulk (+30 max)"] },
-            { name: "Eclipsion", type: "Lantern Rune", chance: "50T", raw: "50T", stats: ["x3 Mythril", "x1 Adamantite", "x10 Tier Luck (x75 max)", "0.15x Rune luck (0.75x max)"] },
+            { name: "Eclipsion", type: "Lantern Rune", chance: "50T", raw: "50T", stats: ["x3 Mythril", "x1 Adamantite", "x10 Tier Luck (x75 max)", "x0.15 Rune Luck (x0.75 max)"] },
             { name: "Starlight Sun", type: "Lantern Rune", chance: "75Qn", raw: "75Qn", stats: ["x0.04 Rune Luck (x0.4 max)", "+15 Rune Bulk (+150 max)", "+10 Tier Bulk (+200 max)", "x5k Emerald"] },
             { name: "Supernova Star", type: "Lantern Rune", chance: "25No", raw: "25No", stats: ["x1k Netherite", "x0.001 Ore Multiplier (x25 max)", "x0.03 Rune Luck (x0.75 max)", "+2.5k Rune Bulk (+350k max)"] },
             { name: "Secret Element", type: "Lantern Rune", chance: "1.5QnDe", raw: "1.5qnde", stats: ["x0.25 Ghoulaxite", "x2.5Oc Adamantite", "x25No Emerald", "x0.03 Ore Multiplier"] },
@@ -505,6 +506,7 @@
             { name: "Mycoshard", type: "Capstone Rune", chance: "1.5No", raw: "1.5No", stats: ["x50 Spores", "x15 Glowy Crystals", "x0.05 Magic Energy", "x0.005 Rune Luck (x0.5 max)"] },
             { name: "Sporethane", type: "Capstone Rune", chance: "25No", raw: "25No", stats: ["x1k Spores", "x350 Glowy Crystals", "x1.5 Magic Energy", "x0.01 Rune Luck (x1.25 max)"] },
             { name: "Echomycra", type: "Capstone Rune", chance: "500No", raw: "500No", stats: ["+5000 Rune Bulk (+1m max)", "x0.02 Rune Luck (x3 max)", "x0.01 Tier Bulk (x1.25 max)", "x500 Tier Luck (x100k max)"] },
+            { name: "Midnight Bloom", type: "Capstone Rune", chance: "1/20SxDe", raw: "20sxde", stats: ["+400k Rune Bulk (+200M Max)", "x0.04 Rune Luck (x20 Max)", "x2 Tier Bulk (x1k Max)", "x0.001 Guild Points (x0.5 Max)"] },
 
             // Astryx
             { name: "Dustfall", type: "Astryx Rune", chance: "1", raw: "1", stats: ["x0.00000000000000015 Dirtite"] },
@@ -625,9 +627,9 @@
                 if (totalPower > 0 && target > 0) {
                     const sec = target / totalPower;
                     etaElement.innerText = formatTime(sec);
-                    if (sec > 604800) { etaElement.className = "text-xl font-bold text-red-500 font-mono drop-shadow-md"; }
-                    else if (sec >= 86400) { etaElement.className = "text-xl font-bold text-red-400 font-mono drop-shadow-md"; }
-                    else if (sec >= 3600) { etaElement.className = "text-xl font-bold text-orange-400 font-mono drop-shadow-md"; }
+                    // Updated coloring logic
+                    if (sec >= 3600) { etaElement.className = "text-xl font-bold text-red-500 font-mono drop-shadow-md"; }
+                    else if (sec >= 300) { etaElement.className = "text-xl font-bold text-orange-400 font-mono drop-shadow-md"; }
                     else { etaElement.className = "text-xl font-bold text-green-400 font-mono drop-shadow-md"; }
                 } else { 
                     etaElement.innerText = "--"; 
@@ -675,7 +677,6 @@
                 rune.type.toLowerCase().includes(searchTerm)
             );
             
-            // Modified sorting logic
             filtered.sort((a, b) => {
                 const valA = parseValue(a.raw);
                 const valB = parseValue(b.raw);
@@ -712,9 +713,9 @@
                 
                 if (totalPower > 0) {
                     eta = formatTime(sec);
-                    if (sec > 604800) colorClass = "text-red-500 font-bold";
-                    else if (sec >= 86400) colorClass = "text-red-400 font-bold";
-                    else if (sec >= 3600) colorClass = "text-orange-400 font-bold";
+                    // Threshold logic updated: Red > 1h, Orange 5m-1h, Green < 5m
+                    if (sec >= 3600) colorClass = "text-red-500 font-bold";
+                    else if (sec >= 300) colorClass = "text-orange-400 font-bold";
                     else colorClass = "text-green-400 font-bold";
                 }
                 
@@ -722,7 +723,7 @@
                 const [darkColor, lightColor, borderColor, iconClass] = cardStyle;
 
                 const card = document.createElement('div');
-                card.className = `rune-card rounded p-4 flex flex-col justify-between h-full`;
+                card.className = `rune-card rounded p-4 flex flex-col justify-between h-full border border-pink-900/20`;
                 card.style.setProperty('--card-dark', darkColor);
                 card.style.setProperty('--card-light', lightColor);
                 card.style.setProperty('--card-border', borderColor);
@@ -744,7 +745,7 @@
                     <div class="mb-4 relative z-10">
                         <div class="flex justify-between items-start mb-1">
                             <h3 class="text-xl font-bold text-white tracking-wide truncate drop-shadow-md" title="${rune.name}">${rune.name}</h3>
-                            <i class="fas fa-external-link-alt text-xs text-white opacity-0 group-hover:opacity-100 transition-opacity"></i>
+                            <i class="fas fa-heart text-xs text-white opacity-0 group-hover:opacity-100 transition-opacity"></i>
                         </div>
                         <div class="text-[10px] font-bold uppercase tracking-widest mb-3 flex items-center gap-1.5 text-white/90">
                              <i class="fas ${iconClass}"></i> ${rune.type}
@@ -752,7 +753,7 @@
                         
                         <div class="grid grid-cols-2 gap-2 text-sm border-t border-white/20 pt-3">
                             <div><div class="text-[9px] text-white/70 uppercase font-bold tracking-wider mb-0.5">Chance</div><div class="font-mono text-white text-shadow-sm">1 in ${cleanChance}</div></div>
-                            <div class="text-right"><div class="text-[9px] text-white/70 uppercase font-bold tracking-wider mb-0.5">ETA</div><div class="font-mono ${colorClass} drop-shadow-md text-white font-bold" style="text-shadow: 0 0 5px rgba(0,0,0,0.8)">${eta}</div></div>
+                            <div class="text-right"><div class="text-[9px] text-white/70 uppercase font-bold tracking-wider mb-0.5">ETA</div><div class="font-mono ${colorClass} drop-shadow-md font-bold" style="text-shadow: 0 0 5px rgba(0,0,0,0.8)">${eta}</div></div>
                         </div>
                         <i class="fas ${iconClass} card-bg-icon"></i>
                     </div>
