@@ -286,7 +286,7 @@
         <div class="flex flex-col md:flex-row gap-3 mb-6 sticky top-0 md:static z-20 bg-[#1a0510] md:bg-transparent p-2 md:p-0 rounded-lg">
             <div class="relative flex-1">
                 <i class="fas fa-search absolute left-4 top-3.5 text-pink-500/50"></i>
-                <input type="text" id="runeSearch" placeholder="Search for runes (e.g. 'Bloom', 'Midnight')..." class="w-full bg-[#250510] border border-pink-900/30 text-white rounded-lg py-3 pl-11 pr-4 focus:border-pink-500 focus:bg-[#350818] transition-all outline-none">
+                <input type="text" id="runeSearch" placeholder="Search for runes (e.g. 'Bloom', 'Ice')..." class="w-full bg-[#250510] border border-pink-900/30 text-white rounded-lg py-3 pl-11 pr-4 focus:border-pink-500 focus:bg-[#350818] transition-all outline-none">
             </div>
             
             <div class="flex flex-wrap items-center gap-2 shrink-0 justify-center md:justify-end">
@@ -310,6 +310,7 @@
         // --- 1. GLOBAL VARIABLES & HELPERS ---
         window.currentSort = { key: 'eta', order: 'asc' };
 
+        // Updated suffixes to include SpDe, OcDe, NoDe
         const suffixes = [
             { val: 1e3, sym: 'k' }, { val: 1e6, sym: 'm' }, { val: 1e9, sym: 'b' }, { val: 1e12, sym: 't' },
             { val: 1e15, sym: 'qd' }, { val: 1e18, sym: 'qn' }, { val: 1e21, sym: 'sx' }, { val: 1e24, sym: 'sp' },
@@ -318,7 +319,9 @@
             { val: 1e36, sym: 'ud' }, { val: 1e36, sym: 'ude' }, 
             { val: 1e39, sym: 'dd' }, { val: 1e39, sym: 'dde' }, 
             { val: 1e42, sym: 'td' }, { val: 1e42, sym: 'tde' }, 
-            { val: 1e45, sym: 'qdde' }, { val: 1e48, sym: 'qnde' }, { val: 1e51, sym: 'sxde' }
+            { val: 1e45, sym: 'qdde' }, { val: 1e48, sym: 'qnde' }, 
+            { val: 1e51, sym: 'sxde' }, { val: 1e54, sym: 'spde' }, 
+            { val: 1e57, sym: 'ocde' }, { val: 1e60, sym: 'node' }, { val: 1e63, sym: 'vgde' }
         ];
 
         const categoryOrder = [
@@ -413,6 +416,7 @@
             { name: "Ragnarok", type: "Frost Rune", chance: "500m", raw: "500m", stats: ["x150 Snow", "+1 Passive Shards (+1 max)", "x1.5 Boss Shards", "x0.25 Rune Luck (x1.5 max)"] },
             { name: "Frozen Core", type: "Frost Rune", chance: "17.5Qn", raw: "17.5Qn", stats: ["x25 Tier Luck (x250 max)", "+20 Tier Bulk (+200 max)", "+1 Passive Shards (+4 max)", "x100m Boss Damage"] },
             { name: "Subzero", type: "Frost Rune", chance: "450Ude", raw: "450Ude", stats: ["+20k Rune Bulk (+5m max)", "x0.01 Rune Luck (x2 max)", "x0.03 Tier Bulk (x7.5 max)", "x2.5M Tier Luck (x100b max)"] },
+            { name: "Corrupted Ice", type: "Frost Rune", chance: "1/150SxDe", raw: "150sxde", stats: ["x2.5Qd Tier Luck", "x5 Tier Bulk", "+500k Rune Bulk", "x0.05 Rune Luck"] },
 
             // Sun
             { name: "Aridic", type: "Sun Rune", chance: "1.54", raw: "1.54", stats: ["x0.0001 Points"] },
@@ -459,7 +463,7 @@
             { name: "Lightveil", type: "Lantern Rune", chance: "1B", raw: "1B", stats: ["x0.0003 Sapphire"] },
             { name: "Solflare", type: "Lantern Rune", chance: "1T", raw: "1T", stats: ["x0.075 Ruby", "x0.025 Cash"] },
             { name: "Luminaris", type: "Lantern Rune", chance: "5T", raw: "5T", stats: ["x0.25 Diamond", "x0.1 Obsidian", "x0.5 Dust", "+5 Rune Bulk (+30 max)"] },
-            { name: "Eclipsion", type: "Lantern Rune", chance: "50T", raw: "50T", stats: ["x3 Mythril", "x1 Adamantite", "x10 Tier Luck (x75 max)", "x0.15 Rune Luck (x0.75 max)"] },
+            { name: "Eclipsion", type: "Lantern Rune", chance: "50T", raw: "50T", stats: ["x3 Mythril", "x1 Adamantite", "x10 Tier Luck (x75 max)", "0.15x Rune luck (0.75x max)"] },
             { name: "Starlight Sun", type: "Lantern Rune", chance: "75Qn", raw: "75Qn", stats: ["x0.04 Rune Luck (x0.4 max)", "+15 Rune Bulk (+150 max)", "+10 Tier Bulk (+200 max)", "x5k Emerald"] },
             { name: "Supernova Star", type: "Lantern Rune", chance: "25No", raw: "25No", stats: ["x1k Netherite", "x0.001 Ore Multiplier (x25 max)", "x0.03 Rune Luck (x0.75 max)", "+2.5k Rune Bulk (+350k max)"] },
             { name: "Secret Element", type: "Lantern Rune", chance: "1.5QnDe", raw: "1.5qnde", stats: ["x0.25 Ghoulaxite", "x2.5Oc Adamantite", "x25No Emerald", "x0.03 Ore Multiplier"] },
@@ -627,7 +631,7 @@
                 if (totalPower > 0 && target > 0) {
                     const sec = target / totalPower;
                     etaElement.innerText = formatTime(sec);
-                    // Updated coloring logic
+                    // Updated coloring logic: Red > 1h, Orange 5m-1h, Green < 5m
                     if (sec >= 3600) { etaElement.className = "text-xl font-bold text-red-500 font-mono drop-shadow-md"; }
                     else if (sec >= 300) { etaElement.className = "text-xl font-bold text-orange-400 font-mono drop-shadow-md"; }
                     else { etaElement.className = "text-xl font-bold text-green-400 font-mono drop-shadow-md"; }
