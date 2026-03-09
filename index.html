@@ -34,7 +34,6 @@
 
         .font-game { font-family: 'Russo One', sans-serif; }
 
-        /* Chunky Title Styling */
         .title-gradient-green {
             background: linear-gradient(to bottom, #86efac 0%, #22c55e 50%, #166534 100%);
             -webkit-background-clip: text;
@@ -49,7 +48,6 @@
             filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5));
         }
 
-        /* Dashboard Panel Styling */
         .glass-panel {
             background: var(--panel-bg);
             border: 3px solid #1f2937;
@@ -57,7 +55,6 @@
             box-shadow: 0 10px 40px rgba(0, 0, 0, 0.7);
         }
 
-        /* Neon Border Focus */
         .input-box {
             background-color: #0d1117;
             border: 2px solid #374151;
@@ -75,7 +72,6 @@
             outline: none;
         }
 
-        /* Card Decoration - No more squishing! */
         .rune-card {
             background: linear-gradient(145deg, var(--tier-bg-dark), var(--tier-bg-light));
             border: 2px solid var(--tier-color);
@@ -86,7 +82,7 @@
             box-shadow: 0 4px 15px rgba(0,0,0,0.3), inset 0 0 30px rgba(var(--tier-color-rgb), 0.15);
         }
         .rune-card:hover {
-            transform: translateY(-5px);
+            transform: translateY(-5px) scale(1.02);
             box-shadow: 0 15px 35px rgba(0,0,0,0.7), 0 0 20px var(--tier-color);
             border-color: var(--tier-color);
         }
@@ -99,7 +95,6 @@
             pointer-events: none;
         }
 
-        /* Custom Checkbox Toggle */
         .toggle-btn {
             width: 48px; height: 26px; background: #374151; border: 2px solid #4b5563;
             border-radius: 99px; position: relative; cursor: pointer; transition: 0.3s;
@@ -111,8 +106,9 @@
         input:checked + .toggle-btn { background-color: var(--neon-green); border-color: #16a34a; }
         input:checked + .toggle-btn .toggle-dot { transform: translateX(22px); }
 
-        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar { width: 8px; }
         ::-webkit-scrollbar-thumb { background: #3b82f6; border-radius: 10px; }
+        ::-webkit-scrollbar-track { background: transparent; }
         
         .stat-badge {
             background: rgba(0,0,0,0.5);
@@ -126,9 +122,10 @@
         }
     </style>
 </head>
-<body class="p-2 md:p-4 min-h-screen flex flex-col overflow-y-auto lg:overflow-hidden">
+<!-- Body Layout: Normal scroll mobile, No scroll on body for Desktop (h-screen) -->
+<body class="p-2 md:p-4 lg:p-6 min-h-screen flex flex-col lg:h-screen lg:overflow-hidden">
 
-    <!-- HEADER TOP BANNER (Fixed Height) -->
+    <!-- HEADER TOP BANNER (Always fixed height, shrink-0) -->
     <header class="w-full shrink-0 mb-4 lg:mb-6">
         <div class="glass-panel p-4 md:p-6 flex flex-col md:flex-row items-center justify-between gap-6 border-b-8 border-blue-600/30">
             <div class="flex items-center gap-5">
@@ -156,12 +153,13 @@
         </div>
     </header>
 
-    <!-- MAIN INTERFACE WRAPPER -->
+    <!-- MAIN INTERFACE WRAPPER (flex-1 forces it to fill remaining screen height on desktop) -->
     <div class="flex-1 flex flex-col lg:flex-row gap-4 lg:gap-6 min-h-0">
         
         <!-- SIDEBAR: CONTROLS -->
-        <aside class="w-full lg:w-[360px] shrink-0 flex flex-col z-30">
-            <div class="glass-panel p-5 flex flex-col h-auto lg:h-full min-h-0">
+        <!-- Desktop: fixed width, full height of wrapper. Mobile: normal width/height -->
+        <aside class="w-full lg:w-[360px] shrink-0 flex flex-col lg:h-full z-30">
+            <div class="glass-panel p-5 flex flex-col lg:h-full min-h-0">
                 <div class="flex items-center justify-between mb-6 shrink-0">
                     <div class="flex items-center gap-2">
                         <div class="bg-blue-600 p-2 rounded-lg shadow-lg">
@@ -172,8 +170,8 @@
                     <button id="toggleMobileMenu" class="lg:hidden text-xs font-bold bg-slate-800 px-4 py-2 rounded-xl border-2 border-slate-700 text-blue-400 uppercase">Settings</button>
                 </div>
 
-                <!-- Scrollable Content of Sidebar -->
-                <div id="sideContent" class="space-y-6 lg:flex-1 lg:overflow-y-auto pr-1">
+                <!-- Independent Scroll Column 1 (Only scrolls on Desktop if content exceeds) -->
+                <div id="sideContent" class="space-y-6 lg:flex-1 lg:overflow-y-auto pr-2 pb-4">
                     <!-- Base Stats -->
                     <div class="space-y-4">
                         <div>
@@ -204,7 +202,7 @@
                     </div>
 
                     <!-- Multipliers -->
-                    <div class="space-y-3 pb-8">
+                    <div class="space-y-3 pb-2">
                         <label class="text-[10px] font-black text-purple-400 uppercase tracking-widest block mb-1 border-b border-purple-500/20 pb-1 flex items-center gap-2">
                             <i class="fas fa-flask"></i> Potions (1.5x)
                         </label>
@@ -237,7 +235,7 @@
         <!-- RIGHT PANEL: TOOLBAR & RUNE GRID -->
         <main class="flex-1 flex flex-col min-h-0">
             
-            <!-- Toolbar (Fixed above grid) -->
+            <!-- Toolbar (Fixed above grid on desktop) -->
             <div class="flex flex-col sm:flex-row gap-3 mb-4 shrink-0 bg-slate-950/50 p-2 rounded-xl lg:bg-transparent lg:p-0">
                 <div class="relative flex-1">
                     <i class="fas fa-search absolute left-4 top-3.5 text-slate-500"></i>
@@ -253,11 +251,14 @@
                 </div>
             </div>
 
-            <!-- Scrollable Grid Wrapper (Fixes the Squish Bug) -->
-            <div class="h-auto lg:flex-1 lg:overflow-y-auto pr-1 pb-10 scrollbar-gutter-stable">
+            <!-- Independent Scroll Column 2 (Grid) -->
+            <!-- flex-1 makes it take remaining height, overflow-y-auto makes it scroll -->
+            <div class="lg:flex-1 lg:overflow-y-auto pr-2 pb-10 lg:pb-0">
                 <div id="runesGrid" class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-4">
                     <!-- Cards will be injected via JS -->
                 </div>
+                <!-- Bottom padding to ensure last card isn't blocked by screen edge -->
+                <div class="h-10 lg:h-20 w-full"></div>
             </div>
 
             <div id="noResults" class="flex-1 hidden flex-col items-center justify-center text-slate-700/50">
