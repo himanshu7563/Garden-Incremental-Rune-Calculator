@@ -33,12 +33,15 @@
             min-height: 100vh;
             display: flex;
             flex-direction: column;
-            overflow-x: hidden;
+            overflow: hidden; /* Desktop par pura page scroll nahi hoga */
+        }
+
+        @media (max-width: 1023px) {
+            body { overflow-y: auto; } /* Mobile par normal scroll */
         }
 
         .font-game { font-family: 'Russo One', sans-serif; }
 
-        /* Chunky Title Styling */
         .title-gradient-green {
             background: linear-gradient(to bottom, #86efac 0%, #22c55e 50%, #166534 100%);
             -webkit-background-clip: text;
@@ -53,7 +56,6 @@
             filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5));
         }
 
-        /* Dashboard Panel Styling */
         .glass-panel {
             background: var(--panel-bg);
             border: 3px solid #1f2937;
@@ -62,7 +64,6 @@
             position: relative;
         }
 
-        /* Input Styling */
         .input-box {
             background-color: #0d1117;
             border: 2px solid #374151;
@@ -72,7 +73,7 @@
             padding: 12px;
             width: 100%;
             transition: 0.2s;
-            box-shadow: inset 0 2px 4px rgba(0,0,0,0.5);
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.5);
         }
         .input-box:focus {
             border-color: var(--neon-blue);
@@ -80,7 +81,6 @@
             outline: none;
         }
 
-        /* Card Styles */
         .rune-card {
             background: linear-gradient(145deg, var(--tier-bg-dark), var(--tier-bg-light));
             border: 2px solid var(--tier-color);
@@ -96,15 +96,6 @@
             border-color: var(--tier-color);
         }
         
-        .rune-card::before {
-            content: '';
-            position: absolute;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background-image: url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-opacity='0.03' fill-rule='evenodd'%3E%3Ccircle cx='5' cy='5' r='5'/%3E%3C/g%3E%3C/svg%3E");
-            pointer-events: none;
-        }
-
-        /* Custom Checkbox Toggle */
         .toggle-btn {
             width: 48px; height: 26px; background: #374151; border: 2px solid #4b5563;
             border-radius: 99px; position: relative; cursor: pointer; transition: 0.3s;
@@ -130,15 +121,23 @@
             text-transform: uppercase;
         }
 
+        /* Fixed height container for Desktop scroll */
         @media (min-width: 1024px) {
-            .content-wrapper { height: calc(100vh - 160px); overflow: hidden; }
+            .scrollable-column {
+                height: 100%;
+                overflow-y: auto;
+                padding-right: 8px;
+            }
+            .main-content-area {
+                height: calc(100vh - 180px); /* Adjust based on header height */
+            }
         }
     </style>
 </head>
 <body class="p-2 md:p-4">
 
-    <!-- HEADER TOP BANNER -->
-    <div class="w-full mb-4 lg:mb-6">
+    <!-- HEADER TOP BANNER (Sticky on Top) -->
+    <div class="w-full mb-4 lg:mb-6 shrink-0">
         <div class="glass-panel p-4 md:p-6 flex flex-col md:flex-row items-center justify-between gap-6 border-b-8 border-blue-600/30">
             <div class="flex items-center gap-5">
                 <div class="bg-gradient-to-br from-green-500 to-blue-600 p-4 rounded-[1.25rem] shadow-2xl rotate-3 flex items-center justify-center border-2 border-white/10 shrink-0">
@@ -165,14 +164,13 @@
         </div>
     </div>
 
-    <!-- MAIN CONTENT WRAPPER -->
-    <div class="content-wrapper flex flex-col lg:flex-row gap-4 lg:gap-6 flex-1">
+    <!-- MAIN INTERFACE WRAPPER -->
+    <div class="main-content-area flex flex-col lg:flex-row gap-4 lg:gap-6 flex-1 overflow-hidden">
         
-        <!-- SIDEBAR -->
-        <div class="w-full lg:w-[360px] shrink-0 flex flex-col gap-4 z-30">
+        <!-- LEFT SIDEBAR: CONTROLS (Independently Scrollable) -->
+        <div class="w-full lg:w-[360px] shrink-0 flex flex-col h-auto lg:h-full z-30">
             <div class="glass-panel p-5 flex flex-col h-full">
-                
-                <div class="flex items-center justify-between mb-6">
+                <div class="flex items-center justify-between mb-6 shrink-0">
                     <div class="flex items-center gap-2">
                         <div class="bg-blue-600 p-2 rounded-lg shadow-lg">
                             <i class="fas fa-sliders-h text-white text-xs"></i>
@@ -182,8 +180,8 @@
                     <button id="toggleMobileMenu" class="lg:hidden text-xs font-bold bg-slate-800 px-4 py-2 rounded-xl border-2 border-slate-700 text-blue-400 uppercase">Settings</button>
                 </div>
 
-                <div id="sideContent" class="space-y-6 flex-1 lg:overflow-y-auto pr-1">
-                    <!-- Stat Inputs -->
+                <div id="sideContent" class="scrollable-column space-y-6">
+                    <!-- Base Stats -->
                     <div class="space-y-4">
                         <div>
                             <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest block mb-2">Cooldown Speed</label>
@@ -202,7 +200,7 @@
                         </div>
                     </div>
 
-                    <!-- Custom Target Box -->
+                    <!-- Target Estimation -->
                     <div class="bg-blue-600/10 p-5 rounded-2xl border-2 border-blue-500/30 shadow-inner">
                         <label class="text-[10px] font-black text-blue-400 uppercase tracking-widest block mb-3">Custom Target</label>
                         <input type="text" id="target" class="input-box mb-4 border-blue-500/20">
@@ -212,8 +210,8 @@
                         </div>
                     </div>
 
-                    <!-- Potions Section -->
-                    <div class="space-y-3">
+                    <!-- Multipliers -->
+                    <div class="space-y-3 pb-4">
                         <label class="text-[10px] font-black text-purple-400 uppercase tracking-widest block mb-1 border-b border-purple-500/20 pb-1 flex items-center gap-2">
                             <i class="fas fa-flask"></i> Potions (1.5x)
                         </label>
@@ -243,10 +241,10 @@
             </div>
         </div>
 
-        <!-- RIGHT DASHBOARD -->
-        <div class="flex-1 flex flex-col gap-4 overflow-hidden h-full">
-            <!-- Toolbar -->
-            <div class="flex flex-col sm:flex-row gap-3 sticky top-0 z-10 bg-slate-950 lg:bg-transparent p-2 lg:p-0">
+        <!-- RIGHT PANEL: TOOLBAR & RUNE GRID (Independently Scrollable) -->
+        <div class="flex-1 flex flex-col h-full overflow-hidden">
+            <!-- Toolbar (Always visible above the grid) -->
+            <div class="flex flex-col sm:flex-row gap-3 mb-4 shrink-0 bg-slate-950/50 p-2 rounded-xl lg:bg-transparent lg:p-0">
                 <div class="relative flex-1">
                     <i class="fas fa-search absolute left-4 top-3.5 text-slate-500"></i>
                     <input type="text" id="runeSearch" placeholder="Search for Runes..." class="w-full bg-slate-900/80 border-2 border-slate-800 rounded-xl py-3 pl-12 pr-4 font-bold text-sm focus:border-blue-500 outline-none transition-all">
@@ -261,9 +259,11 @@
                 </div>
             </div>
 
-            <!-- Grid Container -->
-            <div id="runesGrid" class="flex-1 grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-4 overflow-y-auto pb-20 pr-1">
-                <!-- JS handles cards -->
+            <!-- Rune Grid Container (The Scrollable Area) -->
+            <div class="flex-1 overflow-hidden">
+                <div id="runesGrid" class="scrollable-column grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-4 pb-20">
+                    <!-- Injected via JavaScript -->
+                </div>
             </div>
 
             <div id="noResults" class="flex-1 hidden flex-col items-center justify-center text-slate-700/50">
@@ -274,7 +274,7 @@
     </div>
 
     <script>
-        // --- DATA & HELPER UTILITIES ---
+        // --- DATA & UTILITIES ---
         const suffixes = [
             { val: 1e3, sym: 'k' }, { val: 1e6, sym: 'm' }, { val: 1e9, sym: 'b' }, { val: 1e12, sym: 't' },
             { val: 1e15, sym: 'qd' }, { val: 1e18, sym: 'qn' }, { val: 1e21, sym: 'sx' }, { val: 1e24, sym: 'sp' },
@@ -319,7 +319,6 @@
             return [`rgba(${rgb}, 0.25)`, `rgba(${rgb}, 0.08)`];
         }
 
-        // --- RUNE DATA ---
         const runeData = [
             // COIN RUNES
             { name: "Rusty", type: "Coin Rune", tier: "Common", chance: "2", raw: "2", stats: ["x2.5 Bronze Coin (Max)"] },
@@ -334,6 +333,7 @@
             { name: "Thorn", type: "Nature Rune", tier: "Rare", chance: "4", raw: "4", stats: ["x15 Bronze Coin (Max)", "x3 Silver Coin (Max)", "x0.7 Gold Coin (Max)"] },
             { name: "Verdant", type: "Nature Rune", tier: "Epic", chance: "10", raw: "10", stats: ["x20 Bronze Coin (Max)", "x4 Silver Coin (Max)", "x1 Gold Coin (Max)"] },
             { name: "Fertile", type: "Nature Rune", tier: "Legendary", chance: "25", raw: "25", stats: ["x25 Bronze Coin (Max)", "x5 Silver Coin (Max)", "x1.2 Gold Coin (Max)"] },
+            { name: "Flourish", type: "Nature Rune", tier: "Mythical", chance: "149.99", raw: "149.99", stats: ["x30 Bronze Coin (Max)", "x6 Silver Coin (Max)", "x1.4 Gold Coin (Max)"] },
             { name: "Overgrowth", type: "Nature Rune", tier: "Secret", chance: "25k", raw: "25k", stats: ["x35 Bronze Coin (Max)", "x7 Silver Coin (Max)", "x1.6 Gold Coin (Max)", "x0.01 Rune Luck (Max)"] },
 
             // CASH RUNES
@@ -344,7 +344,6 @@
             { name: "Capital", type: "Cash Rune", tier: "Secret", chance: "35k", raw: "35k", stats: ["x60 Basic Cash (Max)", "x12 Premium Cash (Max)", "x3 Deluxe Cash (Max)", "x0.01 Rune Luck (Max)"] }
         ]; 
 
-        // Sorting State
         window.sortConfig = { mode: 'category', direction: 'asc' };
 
         function parseValue(str) {
@@ -462,7 +461,6 @@
                 rune.tier.toLowerCase().includes(searchTerm)
             );
 
-            // Logic: Category mode = strictly ordered groups. ETA mode = globally ordered by time.
             filtered.sort((a, b) => {
                 if (window.sortConfig.mode === 'category') {
                     const catA = categoryOrder.indexOf(a.type);
@@ -510,7 +508,8 @@
                 card.onclick = () => { 
                     document.getElementById('target').value = rune.raw; 
                     window.calculate();
-                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                    // Scroll to top of the Grid column only (if needed)
+                    document.querySelector('.scrollable-column').scrollTo({ top: 0, behavior: 'smooth' });
                 };
                 
                 card.innerHTML = `
