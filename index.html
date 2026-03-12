@@ -9,7 +9,7 @@
     <!-- Font Awesome -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <style>
-        /* Premium Game Fonts */
+        /* Premium Game Fonts import kiye hain */
         @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800;900&family=Russo+One&display=swap');
         
         :root {
@@ -34,11 +34,11 @@
             min-height: 100vh;
             display: flex;
             flex-direction: column;
-            overflow: hidden; 
+            overflow: hidden; /* Desktop scroll fix */
         }
 
         @media (max-width: 1023px) {
-            body { overflow-y: auto; height: auto; } 
+            body { overflow-y: auto; height: auto; } /* Mobile par normal scroll */
         }
 
         .font-game { font-family: 'Russo One', sans-serif; }
@@ -83,7 +83,7 @@
             outline: none;
         }
 
-        /* Category Header Styling - Card jaisa naya look */
+        /* Category Header Styling - Game UI match */
         .category-header {
             background: linear-gradient(90deg, #111827, #1f2937);
             border: 2px solid #374151;
@@ -97,7 +97,6 @@
             justify-content: space-between;
             padding: 14px 24px;
         }
-        /* Pattern Overlay */
         .category-header::before {
             content: '';
             position: absolute;
@@ -105,7 +104,6 @@
             background-image: url("data:image/svg+xml,%3Csvg width='20' height='20' viewBox='0 0 20 20' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-opacity='0.02' fill-rule='evenodd'%3E%3Ccircle cx='3' cy='3' r='3'/%3E%3Ccircle cx='13' cy='13' r='3'/%3E%3C/g%3E%3C/svg%3E");
             pointer-events: none;
         }
-        /* Side Glow Effect for distinction */
         .category-header::after {
             content: '';
             position: absolute;
@@ -149,6 +147,7 @@
         input:checked + .toggle-btn { background-color: var(--neon-green); border-color: #16a34a; }
         input:checked + .toggle-btn .toggle-dot { transform: translateX(22px); }
 
+        /* Custom Scrollbar */
         ::-webkit-scrollbar { width: 8px; }
         ::-webkit-scrollbar-thumb { background: #3b82f6; border-radius: 10px; }
         ::-webkit-scrollbar-track { background: transparent; }
@@ -213,7 +212,6 @@
 
                 <!-- Independent Scroll Sidebar -->
                 <div id="sideContent" class="space-y-6 lg:flex-1 lg:overflow-y-auto pr-2 pb-4">
-                    <!-- Base Stats -->
                     <div class="space-y-4">
                         <div>
                             <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest block mb-2">Cooldown Speed</label>
@@ -232,7 +230,7 @@
                         </div>
                     </div>
 
-                    <!-- Target Estimation -->
+                    <!-- Target Estimation Box -->
                     <div class="bg-blue-600/10 p-5 rounded-2xl border-2 border-blue-500/30 shadow-inner">
                         <label class="text-[10px] font-black text-blue-400 uppercase tracking-widest block mb-3">Custom Target</label>
                         <input type="text" id="target" class="input-box mb-4 border-blue-500/20">
@@ -295,11 +293,13 @@
             <!-- Scrollable Grid Wrapper -->
             <div class="lg:flex-1 lg:overflow-y-auto pr-2 pb-10 lg:pb-0">
                 <div id="runesGrid" class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-4">
-                    <!-- Cards will be injected via JS -->
+                    <!-- Cards via JS -->
                 </div>
+                <!-- Bottom spacing -->
                 <div class="h-10 lg:h-20 w-full"></div>
             </div>
 
+            <!-- No Results UI -->
             <div id="noResults" class="flex-1 hidden flex-col items-center justify-center text-slate-700/50">
                 <i class="fas fa-ghost text-7xl mb-6 opacity-20"></i>
                 <h3 class="text-xl font-game uppercase tracking-[0.2em]">No Runes Found</h3>
@@ -323,19 +323,19 @@
         const categoryOrder = ["Coin Rune", "Nature Rune", "Cash Rune", "Town Rune"];
         const tierOrder = ["Common", "Rare", "Epic", "Legendary", "Mythical", "Secret", "Celestial"];
 
-        // Hex to RGB converter logic
+        // Hex to RGB logic
         function hexToRgb(hex) {
             const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
             return result ? `${parseInt(result[1], 16)}, ${parseInt(result[2], 16)}, ${parseInt(result[3], 16)}` : '255, 255, 255';
         }
 
-        // Vibrant category colors
+        // Colors setup for categories and tiers
         function getCategoryColor(type) {
-            if(type === "Coin Rune") return "#3cf03c"; // Bright Green
-            if(type === "Nature Rune") return "#fff021"; // Bright Yellow
-            if(type === "Cash Rune") return "#21b1ff"; // Bright Blue
-            if(type === "Town Rune") return "#ff128a"; // Bright Pink
-            return "#94a3b8"; // Default Grey
+            if(type === "Coin Rune") return "#3cf03c"; 
+            if(type === "Nature Rune") return "#fff021"; 
+            if(type === "Cash Rune") return "#21b1ff"; 
+            if(type === "Town Rune") return "#ff128a"; 
+            return "#94a3b8"; 
         }
 
         function getCardStyle(type) {
@@ -352,37 +352,38 @@
             if(tier === "Epic") return "#e879f9"; 
             if(tier === "Legendary") return "#facc15"; 
             if(tier === "Mythical") return "#ef4444"; 
-            if(tier === "Secret") return "#71717a"; // Visible grey for borders
-            if(tier === "Celestial") return "#8b5cf6"; // Neon Indigo/Purple
+            if(tier === "Secret") return "#71717a"; // Visually clear grey stroke
+            if(tier === "Celestial") return "#8b5cf6"; 
             return "#ffffff";
         }
 
         function getTierBackground(tierColor, tier) {
             if(tier === 'Secret') return ['#000000', '#0a0a0a'];
             if(tier === 'Mythical') return ['#450a0a', '#1a0505'];
-            if(tier === 'Celestial') return ['#1e1b4b', '#0f172a']; // Deep Indigo background
+            if(tier === 'Celestial') return ['#1e1b4b', '#0f172a']; 
             const rgb = hexToRgb(tierColor === "#000000" ? "#1a1a1a" : tierColor);
             return [`rgba(${rgb}, 0.25)`, `rgba(${rgb}, 0.08)`];
         }
 
+        // Updated Rune Data (Sare images se compile karke optimized list)
         const runeData = [
             // COIN RUNES
-            { name: "Rusty", type: "Coin Rune", tier: "Common", chance: "2", raw: "2", stats: ["x2.5 Bronze Coin (Max)"] },
-            { name: "Pure", type: "Coin Rune", tier: "Rare", chance: "5", raw: "5", stats: ["x3.75 Bronze Coin (Max)"] },
-            { name: "Luster", type: "Coin Rune", tier: "Epic", chance: "10", raw: "10", stats: ["x5 Bronze Coin (Max)", "x1.25 Silver Coin (Max)"] },
-            { name: "Gilded", type: "Coin Rune", tier: "Legendary", chance: "20", raw: "20", stats: ["x6.25 Bronze Coin (Max)", "x1.75 Silver Coin (Max)"] },
-            { name: "Aureate", type: "Coin Rune", tier: "Mythical", chance: "100", raw: "100", stats: ["x7.5 Bronze Coin (Max)", "x2.5 Silver Coin (Max)", "x0.5 Gold Coin (Max)"] },
-            { name: "Sovereign", type: "Coin Rune", tier: "Secret", chance: "14.99k", raw: "14.99k", stats: ["x10 Bronze Coin (Max)", "x3 Silver Coin (Max)", "x0.6 Gold Coin (Max)", "x0.01 Rune Luck (Max)"] },
+            { name: "Rusty", type: "Coin Rune", tier: "Common", chance: "2", raw: "2", stats: ["x10 Bronze Coin (Max)"] },
+            { name: "Pure", type: "Coin Rune", tier: "Rare", chance: "5", raw: "5", stats: ["x15 Bronze Coin (Max)"] },
+            { name: "Luster", type: "Coin Rune", tier: "Epic", chance: "10", raw: "10", stats: ["x20 Bronze Coin (Max)", "x5 Silver Coin (Max)"] },
+            { name: "Gilded", type: "Coin Rune", tier: "Legendary", chance: "20", raw: "20", stats: ["x25 Bronze Coin (Max)", "x7 Silver Coin (Max)"] },
+            { name: "Aureate", type: "Coin Rune", tier: "Mythical", chance: "100", raw: "100", stats: ["x30 Bronze Coin (Max)", "x10 Silver Coin (Max)", "x2 Gold Coin (Max)"] },
+            { name: "Sovereign", type: "Coin Rune", tier: "Secret", chance: "14.99k", raw: "14.99k", stats: ["x40 Bronze Coin (Max)", "x12 Silver Coin (Max)", "x2.5 Gold Coin (Max)", "+0.05 Rune Luck (Max)"] },
             { name: "Wealthbound", type: "Coin Rune", tier: "Celestial", chance: "10m", raw: "10m", stats: ["x12.5 Bronze Coin (Max)", "x3.75 Silver Coin (Max)", "x0.7 Gold Coin (Max)", "x0.05 Rune Luck (Max)", "x1 Rune Bulk (Max)"] },
             { name: "Vault Of Infinity", type: "Coin Rune", tier: "Celestial", chance: "85m", raw: "85m", stats: ["x25 Bronze Coin (Max)", "x5 Silver Coin (Max)", "x1 Gold Coin (Max)", "x0.05 Rune Luck (Max)", "x1 Rune Bulk (Max)"] },
             
             // NATURE RUNES
-            { name: "Sprout", type: "Nature Rune", tier: "Common", chance: "2", raw: "2", stats: ["x12.5 Bronze Coin (Max)", "x2.5 Silver Coin (Max)", "x0.5 Gold Coin (Max)"] },
-            { name: "Thorn", type: "Nature Rune", tier: "Rare", chance: "4", raw: "4", stats: ["x15 Bronze Coin (Max)", "x3 Silver Coin (Max)", "x0.7 Gold Coin (Max)"] },
-            { name: "Verdant", type: "Nature Rune", tier: "Epic", chance: "10", raw: "10", stats: ["x20 Bronze Coin (Max)", "x4 Silver Coin (Max)", "x1 Gold Coin (Max)"] },
-            { name: "Fertile", type: "Nature Rune", tier: "Legendary", chance: "25", raw: "25", stats: ["x25 Bronze Coin (Max)", "x5 Silver Coin (Max)", "x1.2 Gold Coin (Max)"] },
-            { name: "Flourish", type: "Nature Rune", tier: "Mythical", chance: "149.99", raw: "149.99", stats: ["x30 Bronze Coin (Max)", "x6 Silver Coin (Max)", "x1.4 Gold Coin (Max)"] },
-            { name: "Overgrowth", type: "Nature Rune", tier: "Secret", chance: "25k", raw: "25k", stats: ["x35 Bronze Coin (Max)", "x7 Silver Coin (Max)", "x1.6 Gold Coin (Max)", "x0.01 Rune Luck (Max)"] },
+            { name: "Sprout", type: "Nature Rune", tier: "Common", chance: "2", raw: "2", stats: ["x25 Bronze Coin (Max)", "x5 Silver Coin (Max)", "x1 Gold Coin (Max)"] },
+            { name: "Thorn", type: "Nature Rune", tier: "Rare", chance: "4", raw: "4", stats: ["x30 Bronze Coin (Max)", "x6 Silver Coin (Max)", "x1.5 Gold Coin (Max)"] },
+            { name: "Verdant", type: "Nature Rune", tier: "Epic", chance: "10", raw: "10", stats: ["x40 Bronze Coin (Max)", "x8 Silver Coin (Max)", "x2 Gold Coin (Max)"] },
+            { name: "Fertile", type: "Nature Rune", tier: "Legendary", chance: "25", raw: "25", stats: ["x50 Bronze Coin (Max)", "x10 Silver Coin (Max)", "x2.4 Gold Coin (Max)"] },
+            { name: "Flourish", type: "Nature Rune", tier: "Mythical", chance: "149.99", raw: "149.99", stats: ["x60 Bronze Coin (Max)", "x12 Silver Coin (Max)", "x2.8 Gold Coin (Max)"] },
+            { name: "Overgrowth", type: "Nature Rune", tier: "Secret", chance: "25k", raw: "25k", stats: ["x140 Bronze Coin (Max)", "x28 Silver Coin (Max)", "x6.4 Gold Coin (Max)", "+0.05 Rune Luck (Max)"] },
             { name: "Sunspire", type: "Nature Rune", tier: "Celestial", chance: "25m", raw: "25m", stats: ["x50 Bronze Coin (Max)", "x10 Silver Coin (Max)", "x2 Gold Coin (Max)", "x0.05 Rune Luck (Max)", "x1 Rune Bulk (Max)"] },
             { name: "Verdant Nexus", type: "Nature Rune", tier: "Celestial", chance: "150m", raw: "150m", stats: [] },
 
@@ -409,6 +410,7 @@
 
         window.sortConfig = { mode: 'category', direction: 'asc' };
 
+        // Math Logic
         function parseValue(str) {
             if (!str) return 0;
             str = str.toString().toLowerCase().trim();
@@ -512,6 +514,7 @@
             }
         }
 
+        // Render Cards UI
         function updateGrid(power) {
             const grid = document.getElementById('runesGrid');
             const noRes = document.getElementById('noResults');
@@ -524,7 +527,7 @@
                 rune.tier.toLowerCase().includes(searchTerm)
             );
 
-            // Detailed Sorting Logic
+            // Sorting Logic
             filtered.sort((a, b) => {
                 if (window.sortConfig.mode === 'category') {
                     const catA = categoryOrder.indexOf(a.type);
@@ -566,7 +569,7 @@
                 const tierRgb = hexToRgb(tierColor);
                 const [bgDark, bgLight] = getTierBackground(tierColor, rune.tier);
 
-                // Naya Premium Category Header Logic
+                // Category Header UI Generator
                 if (window.sortConfig.mode === 'category' && rune.type !== currentCategory) {
                     currentCategory = rune.type;
                     const catCount = filtered.filter(r => r.type === currentCategory).length;
@@ -592,7 +595,6 @@
                     grid.appendChild(header);
                 }
 
-                // Render the Rune Card
                 const card = document.createElement('div');
                 card.className = 'rune-card p-4 cursor-pointer';
                 card.style.setProperty('--tier-color', tierColor); 
@@ -605,7 +607,7 @@
                     window.calculate();
                 };
                 
-                // Naya text style Secret tier ke liye taaki wo dark bg pe chamke
+                // Secret tier ke liye clear visible styling
                 let tierTextUI = '';
                 if (rune.tier === 'Secret') {
                     tierTextUI = `<div class="text-[12px] font-game uppercase tracking-wider" style="color: #0f172a; -webkit-text-stroke: 1px #cbd5e1; text-shadow: 0 2px 10px rgba(255,255,255,0.4);">
@@ -645,6 +647,7 @@
             });
         }
 
+        // App initialization
         document.addEventListener('DOMContentLoaded', () => {
             const toggle = document.getElementById('toggleMobileMenu');
             const side = document.getElementById('sideContent');
@@ -652,10 +655,13 @@
                 side.classList.toggle('hidden');
                 toggle.innerText = side.classList.contains('hidden') ? 'Settings' : 'Hide Settings';
             };
+            
+            // Events
             ['speed', 'bulk', 'luck', 'target', 'runeSearch'].forEach(id => document.getElementById(id).oninput = window.calculate);
             ['bulk2x', 'luck2x', 'speed2x'].forEach(id => document.getElementById(id).onchange = window.calculate);
             document.getElementById('modeTotal').onclick = window.setModeCategory;
             document.getElementById('modeEta').onclick = window.setModeEta;
+            
             window.calculate();
         });
     </script>
