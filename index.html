@@ -321,7 +321,7 @@
         ];
 
         const categoryOrder = ["Coin Rune", "Nature Rune", "Cash Rune", "Town Rune"];
-        const tierOrder = ["Common", "Rare", "Epic", "Legendary", "Mythical", "Secret", "Celestial"];
+        const tierOrder = ["Common", "Rare", "Epic", "Legendary", "Mythical", "Secret", "Celestial", "Transcendents"];
 
         // Hex to RGB logic
         function hexToRgb(hex) {
@@ -354,6 +354,7 @@
             if(tier === "Mythical") return "#ef4444"; 
             if(tier === "Secret") return "#71717a"; // Visually clear grey stroke
             if(tier === "Celestial") return "#8b5cf6"; 
+            if(tier === "Transcendents") return "#e2e8f0"; // Premium Bright Silver
             return "#ffffff";
         }
 
@@ -361,6 +362,7 @@
             if(tier === 'Secret') return ['#000000', '#0a0a0a'];
             if(tier === 'Mythical') return ['#450a0a', '#1a0505'];
             if(tier === 'Celestial') return ['#1e1b4b', '#0f172a']; 
+            if(tier === 'Transcendents') return ['#0f172a', '#020617']; // Sleek dark slate for silver contrast
             const rgb = hexToRgb(tierColor === "#000000" ? "#1a1a1a" : tierColor);
             return [`rgba(${rgb}, 0.25)`, `rgba(${rgb}, 0.08)`];
         }
@@ -374,8 +376,9 @@
             { name: "Gilded", type: "Coin Rune", tier: "Legendary", chance: "20", raw: "20", stats: ["x25 Bronze Coin (Max)", "x7 Silver Coin (Max)"] },
             { name: "Aureate", type: "Coin Rune", tier: "Mythical", chance: "100", raw: "100", stats: ["x30 Bronze Coin (Max)", "x10 Silver Coin (Max)", "x2 Gold Coin (Max)"] },
             { name: "Sovereign", type: "Coin Rune", tier: "Secret", chance: "14.99k", raw: "14.99k", stats: ["x40 Bronze Coin (Max)", "x12 Silver Coin (Max)", "x2.5 Gold Coin (Max)", "+0.05 Rune Luck (Max)"] },
-            { name: "Wealthbound", type: "Coin Rune", tier: "Celestial", chance: "10m", raw: "10m", stats: ["x12.5 Bronze Coin (Max)", "x3.75 Silver Coin (Max)", "x0.7 Gold Coin (Max)", "x0.05 Rune Luck (Max)", "x1 Rune Bulk (Max)"] },
-            { name: "Vault Of Infinity", type: "Coin Rune", tier: "Celestial", chance: "85m", raw: "85m", stats: ["x25 Bronze Coin (Max)", "x5 Silver Coin (Max)", "x1 Gold Coin (Max)", "x0.05 Rune Luck (Max)", "x1 Rune Bulk (Max)"] },
+            { name: "Wealthbound", type: "Coin Rune", tier: "Celestial", chance: "10m", raw: "10m", stats: ["x50 Bronze Coin (Max)", "x15 Silver Coin (Max)", "x3 Gold Coin (Max)", "+0.2 Rune Luck (Max)", "+2 Rune Bulk (Max)"] },
+            { name: "Vault Of Infinity", type: "Coin Rune", tier: "Celestial", chance: "85m", raw: "85m", stats: ["x100 Bronze Coin (Max)", "x20 Silver Coin (Max)", "x4 Gold Coin (Max)", "+0.5 Rune Luck (Max)", "+4 Rune Bulk (Max)"] },
+            { name: "Golden Paradox", type: "Coin Rune", tier: "Transcendents", chance: "750m", raw: "750m", stats: ["x200 Bronze Coin (Max)", "x40 Silver Coin (Max)", "x8 Gold Coin (Max)", "+1.5 Rune Luck (Max)", "+12 Rune Bulk (Max)"] },
             
             // NATURE RUNES
             { name: "Sprout", type: "Nature Rune", tier: "Common", chance: "2", raw: "2", stats: ["x25 Bronze Coin (Max)", "x5 Silver Coin (Max)", "x1 Gold Coin (Max)"] },
@@ -384,28 +387,31 @@
             { name: "Fertile", type: "Nature Rune", tier: "Legendary", chance: "25", raw: "25", stats: ["x50 Bronze Coin (Max)", "x10 Silver Coin (Max)", "x2.4 Gold Coin (Max)"] },
             { name: "Flourish", type: "Nature Rune", tier: "Mythical", chance: "149.99", raw: "149.99", stats: ["x60 Bronze Coin (Max)", "x12 Silver Coin (Max)", "x2.8 Gold Coin (Max)"] },
             { name: "Overgrowth", type: "Nature Rune", tier: "Secret", chance: "25k", raw: "25k", stats: ["x140 Bronze Coin (Max)", "x28 Silver Coin (Max)", "x6.4 Gold Coin (Max)", "+0.05 Rune Luck (Max)"] },
-            { name: "Sunspire", type: "Nature Rune", tier: "Celestial", chance: "25m", raw: "25m", stats: ["x50 Bronze Coin (Max)", "x10 Silver Coin (Max)", "x2 Gold Coin (Max)", "x0.05 Rune Luck (Max)", "x1 Rune Bulk (Max)"] },
-            { name: "Verdant Nexus", type: "Nature Rune", tier: "Celestial", chance: "150m", raw: "150m", stats: [] },
+            { name: "Sunspire", type: "Nature Rune", tier: "Celestial", chance: "25m", raw: "25m", stats: ["x200 Bronze Coin (Max)", "x40 Silver Coin (Max)", "x8 Gold Coin (Max)", "+0.3 Rune Luck (Max)", "+3 Rune Bulk (Max)"] },
+            { name: "Verdant Nexus", type: "Nature Rune", tier: "Celestial", chance: "150m", raw: "150m", stats: ["x400 Bronze Coin (Max)", "x80 Silver Coin (Max)", "x16 Gold Coin (Max)", "+0.7 Rune Luck (Max)", "+6 Rune Bulk (Max)"] },
+            { name: "Earthwarden", type: "Nature Rune", tier: "Transcendents", chance: "900m", raw: "900m", stats: ["x800 Bronze Coin (Max)", "x160 Silver Coin (Max)", "x32 Gold Coin (Max)", "+1.5 Rune Luck (Max)", "+12 Rune Bulk (Max)"] },
 
             // CASH RUNES
-            { name: "Loose Change", type: "Cash Rune", tier: "Common", chance: "2", raw: "2", stats: ["x20 Basic Cash (Max)"] },
-            { name: "Paycheck", type: "Cash Rune", tier: "Rare", chance: "5", raw: "5", stats: ["x25 Basic Cash (Max)"] },
+            { name: "Loose Change", type: "Cash Rune", tier: "Common", chance: "2", raw: "2", stats: ["x80 Basic Cash (Max)"] },
+            { name: "Paycheck", type: "Cash Rune", tier: "Rare", chance: "5", raw: "5", stats: ["x100 Basic Cash (Max)"] },
             { name: "Banknote", type: "Cash Rune", tier: "Epic", chance: "25", raw: "25", stats: ["x120 Basic Cash (Max)", "x24 Premium Cash (Max)"] },
             { name: "Commerce", type: "Cash Rune", tier: "Legendary", chance: "225", raw: "225", stats: ["x160 Basic Cash (Max)", "x32 Premium Cash (Max)"] },
             { name: "Riches", type: "Cash Rune", tier: "Mythical", chance: "750", raw: "750", stats: ["x200 Basic Cash (Max)", "x40 Premium Cash (Max)"] },
             { name: "Capital", type: "Cash Rune", tier: "Secret", chance: "35k", raw: "35k", stats: ["x240 Basic Cash (Max)", "x48 Premium Cash (Max)", "x12 Deluxe Cash (Max)", "+0.05 Rune Luck (Max)"] },
-            { name: "Omnicash", type: "Cash Rune", tier: "Celestial", chance: "225m", raw: "225m", stats: [] },
-            { name: "Monopoly", type: "Cash Rune", tier: "Celestial", chance: "44.99m", raw: "44.99m", stats: ["x100 Basic Cash (Max)", "x20 Premium Cash (Max)", "x4 Deluxe Cash (Max)", "x1 Rune Bulk (Max)", "x0.05 Rune Luck (Max)"] },
+            { name: "Omnicash", type: "Cash Rune", tier: "Celestial", chance: "225m", raw: "225m", stats: ["x800 Basic Cash (Max)", "x160 Premium Cash (Max)", "x40 Deluxe Cash (Max)", "+6 Rune Bulk (Max)", "+1 Rune Luck (Max)"] },
+            { name: "Monopoly", type: "Cash Rune", tier: "Celestial", chance: "44.99m", raw: "44.99m", stats: ["x400 Basic Cash (Max)", "x80 Premium Cash (Max)", "x16 Deluxe Cash (Max)", "+3 Rune Bulk (Max)", "+0.5 Rune Luck (Max)"] },
+            { name: "Supreme Treasury", type: "Cash Rune", tier: "Transcendents", chance: "999.99m", raw: "999.99m", stats: ["x1.6k Basic Cash (Max)", "x320 Premium Cash (Max)", "x80 Deluxe Cash (Max)", "+12 Rune Bulk (Max)", "+2 Rune Luck (Max)"] },
 
             // TOWN RUNES
-            { name: "Kiosk", type: "Town Rune", tier: "Common", chance: "2", raw: "2", stats: ["x160 Basic Cash (Max)"] },
-            { name: "Apartment", type: "Town Rune", tier: "Rare", chance: "6", raw: "6", stats: ["x200 Basic Cash (Max)"] },
+            { name: "Kiosk", type: "Town Rune", tier: "Common", chance: "2", raw: "2", stats: ["x640 Basic Cash (Max)"] },
+            { name: "Apartment", type: "Town Rune", tier: "Rare", chance: "6", raw: "6", stats: ["x800 Basic Cash (Max)"] },
             { name: "House", type: "Town Rune", tier: "Epic", chance: "35", raw: "35", stats: ["x960 Basic Cash (Max)", "x192 Premium Cash (Max)"] },
             { name: "Warehouse", type: "Town Rune", tier: "Legendary", chance: "250", raw: "250", stats: ["x1.12k Basic Cash (Max)", "x224 Premium Cash (Max)"] },
             { name: "City Hall", type: "Town Rune", tier: "Mythical", chance: "650", raw: "650", stats: ["x1.28k Basic Cash (Max)", "x256 Premium Cash (Max)"] },
-            { name: "Skyscraper", type: "Town Rune", tier: "Secret", chance: "35k", raw: "35k", stats: ["x400 Basic Cash (Max)", "x80 Premium Cash (Max)", "x16 Deluxe Cash (Max)", "x0.01 Rune Luck (Max)"] },
-            { name: "Megacity", type: "Town Rune", tier: "Celestial", chance: "65m", raw: "65m", stats: [] },
-            { name: "Global Core", type: "Town Rune", tier: "Celestial", chance: "174.99m", raw: "174.99m", stats: [] }
+            { name: "Skyscraper", type: "Town Rune", tier: "Secret", chance: "35k", raw: "35k", stats: ["x1.6k Basic Cash (Max)", "x320 Premium Cash (Max)", "x64 Deluxe Cash (Max)", "+0.05 Rune Luck (Max)"] },
+            { name: "Megacity", type: "Town Rune", tier: "Celestial", chance: "65m", raw: "65m", stats: ["x2.4k Basic Cash (Max)", "x480 Premium Cash (Max)", "x96 Deluxe Cash (Max)", "+3 Rune Bulk (Max)", "+0.5 Rune Luck (Max)"] },
+            { name: "Global Core", type: "Town Rune", tier: "Celestial", chance: "174.99m", raw: "174.99m", stats: ["x4.8k Basic Cash (Max)", "x960 Premium Cash (Max)", "x192 Deluxe Cash (Max)", "+6 Rune Bulk (Max)", "+1 Rune Luck (Max)"] },
+            { name: "Eternal Kingdom", type: "Town Rune", tier: "Transcendents", chance: "1.25b", raw: "1.25b", stats: ["x9.6k Basic Cash (Max)", "x1.92k Premium Cash (Max)", "x384 Deluxe Cash (Max)", "+12 Rune Bulk (Max)", "+2 Rune Luck (Max)"] }
         ]; 
 
         window.sortConfig = { mode: 'category', direction: 'asc' };
@@ -568,7 +574,7 @@
                 const tierColor = getTierColor(rune.tier);
                 const tierRgb = hexToRgb(tierColor);
                 const [bgDark, bgLight] = getTierBackground(tierColor, rune.tier);
-
+                
                 // Category Header UI Generator
                 if (window.sortConfig.mode === 'category' && rune.type !== currentCategory) {
                     currentCategory = rune.type;
@@ -607,16 +613,34 @@
                     window.calculate();
                 };
                 
-                // Secret tier ke liye clear visible styling
+                // Secret aur Transcendents tier ke liye clear visible styling
                 let tierTextUI = '';
                 if (rune.tier === 'Secret') {
                     tierTextUI = `<div class="text-[12px] font-game uppercase tracking-wider" style="color: #0f172a; -webkit-text-stroke: 1px #cbd5e1; text-shadow: 0 2px 10px rgba(255,255,255,0.4);">
+                        ${rune.tier}
+                    </div>`;
+                } else if (rune.tier === 'Transcendents') {
+                    // Premium Silver/Platinum Glow Effect
+                    tierTextUI = `<div class="text-[12px] font-game uppercase tracking-widest animate-pulse" style="color: #ffffff; -webkit-text-stroke: 1px #64748b; text-shadow: 0 0 15px #ffffff, 0 0 25px #94a3b8;">
+                        ${rune.tier}
+                    </div>`;
+                } else if (rune.tier === 'Celestial') {
+                    // Premium Dual-Color Gradient (Cyan & Purple) Glow
+                    tierTextUI = `<div class="text-[12px] font-game uppercase tracking-widest animate-pulse" style="background: linear-gradient(90deg, #00ffff 0%, #cc00ff 50%, #00ffff 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; filter: drop-shadow(0 0 8px rgba(204,0,255,0.7)) drop-shadow(0 0 4px rgba(0,255,255,0.5)); -webkit-text-stroke: 0.5px rgba(255,255,255,0.2);">
                         ${rune.tier}
                     </div>`;
                 } else {
                     tierTextUI = `<div class="text-[11px] font-game uppercase tracking-wider" style="color: ${tierColor}; text-shadow: 0 0 10px ${tierColor}80">
                         ${rune.tier}
                     </div>`;
+                }
+
+                // Rune Name Gradient for High Tiers
+                let runeNameUI = `<h4 class="text-2xl font-game text-white mb-3 truncate" style="text-shadow: 0 2px 4px rgba(0,0,0,0.5)">${rune.name}</h4>`;
+                if (rune.tier === 'Celestial') {
+                    runeNameUI = `<h4 class="text-2xl font-game mb-3 truncate" style="background: linear-gradient(90deg, #00ffff 0%, #cc00ff 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.8));">${rune.name}</h4>`;
+                } else if (rune.tier === 'Transcendents') {
+                    runeNameUI = `<h4 class="text-2xl font-game mb-3 truncate" style="background: linear-gradient(90deg, #ffffff 0%, #94a3b8 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.8));">${rune.name}</h4>`;
                 }
 
                 card.innerHTML = `
@@ -627,7 +651,7 @@
                             </div>
                             ${tierTextUI}
                         </div>
-                        <h4 class="text-2xl font-game text-white mb-3 truncate" style="text-shadow: 0 2px 4px rgba(0,0,0,0.5)">${rune.name}</h4>
+                        ${runeNameUI}
                         <div class="bg-black/50 rounded-lg p-2.5 border border-white/5 space-y-1.5">
                             <div class="flex justify-between text-[11px] font-bold">
                                 <span class="text-slate-400">CHANCE:</span>
