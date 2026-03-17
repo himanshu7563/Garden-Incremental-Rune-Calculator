@@ -4,12 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Currency Incremental - Rune Calculator</title>
-    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com/"></script>
-    <!-- Font Awesome -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <style>
-        /* Premium Game Fonts import kiye hain */
         @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800;900&family=Russo+One&display=swap');
         
         :root {
@@ -25,7 +22,6 @@
         body { 
             font-family: 'Nunito', sans-serif; 
             background-color: var(--bg-main); 
-            /* Subtle dotted background pattern */
             background-image: 
                 radial-gradient(circle at 10% 10%, rgba(59, 130, 246, 0.08) 0%, transparent 40%),
                 radial-gradient(circle at 90% 90%, rgba(34, 197, 94, 0.08) 0%, transparent 40%);
@@ -34,16 +30,15 @@
             min-height: 100vh;
             display: flex;
             flex-direction: column;
-            overflow: hidden; /* Desktop scroll fix */
+            overflow: hidden; 
         }
 
         @media (max-width: 1023px) {
-            body { overflow-y: auto; height: auto; } /* Mobile par normal scroll */
+            body { overflow-y: auto; height: auto; }
         }
 
         .font-game { font-family: 'Russo One', sans-serif; }
 
-        /* Main Headers Styling */
         .title-gradient-green {
             background: linear-gradient(to bottom, #86efac 0%, #22c55e 50%, #166534 100%);
             -webkit-background-clip: text;
@@ -65,7 +60,6 @@
             box-shadow: 0 10px 40px rgba(0, 0, 0, 0.7);
         }
 
-        /* Inputs Styling */
         .input-box {
             background-color: #0d1117;
             border: 2px solid #374151;
@@ -77,13 +71,13 @@
             transition: 0.2s;
             box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.5);
         }
+        
         .input-box:focus {
             border-color: var(--neon-blue);
             box-shadow: 0 0 15px rgba(59, 130, 246, 0.3);
             outline: none;
         }
 
-        /* Category Header Styling - Game UI match */
         .category-header {
             background: linear-gradient(90deg, #111827, #1f2937);
             border: 2px solid #374151;
@@ -97,6 +91,7 @@
             justify-content: space-between;
             padding: 14px 24px;
         }
+        
         .category-header::before {
             content: '';
             position: absolute;
@@ -104,6 +99,7 @@
             background-image: url("data:image/svg+xml,%3Csvg width='20' height='20' viewBox='0 0 20 20' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-opacity='0.02' fill-rule='evenodd'%3E%3Ccircle cx='3' cy='3' r='3'/%3E%3Ccircle cx='13' cy='13' r='3'/%3E%3C/g%3E%3C/svg%3E");
             pointer-events: none;
         }
+        
         .category-header::after {
             content: '';
             position: absolute;
@@ -112,7 +108,6 @@
             pointer-events: none;
         }
 
-        /* Rune Card Styling */
         .rune-card {
             background: linear-gradient(145deg, var(--tier-bg-dark), var(--tier-bg-light));
             border: 2px solid var(--tier-color);
@@ -122,17 +117,19 @@
             overflow: hidden;
             box-shadow: 0 4px 15px rgba(0,0,0,0.3);
         }
+        
         .rune-card:not(.basic-card):hover {
             transform: translateY(-5px) scale(1.02);
             box-shadow: 0 15px 35px rgba(0,0,0,0.7), 0 0 20px var(--tier-color);
             border-color: var(--tier-color);
         }
-        /* Basic card hover wapas clean look ke sath */
+        
         .rune-card.basic-card:hover {
             transform: translateY(-3px);
             box-shadow: 0 8px 20px rgba(0,0,0,0.5), 0 0 12px rgba(var(--tier-color-rgb), 0.4);
             border-color: var(--tier-color);
         }
+        
         .rune-card::before {
             content: '';
             position: absolute;
@@ -141,7 +138,6 @@
             pointer-events: none;
         }
 
-        /* Premium Shine Effect for Transcendents, Celestial, and Secret */
         .premium-shine::after {
             content: '';
             position: absolute;
@@ -152,24 +148,25 @@
             animation: shine-effect 4s infinite linear;
             pointer-events: none;
         }
+        
         @keyframes shine-effect {
             0% { transform: translate(-30%, -30%) rotate(-45deg); }
             100% { transform: translate(30%, 30%) rotate(-45deg); }
         }
 
-        /* Toggle Button Styling */
         .toggle-btn {
             width: 48px; height: 26px; background: #374151; border: 2px solid #4b5563;
             border-radius: 99px; position: relative; cursor: pointer; transition: 0.3s;
         }
+        
         .toggle-dot {
             position: absolute; top: 3px; left: 3px; width: 16px; height: 16px;
             background: white; border-radius: 50%; transition: 0.3s;
         }
+        
         input:checked + .toggle-btn { background-color: var(--neon-green); border-color: #16a34a; }
         input:checked + .toggle-btn .toggle-dot { transform: translateX(22px); }
 
-        /* Custom Scrollbar */
         ::-webkit-scrollbar { width: 8px; }
         ::-webkit-scrollbar-thumb { background: #3b82f6; border-radius: 10px; }
         ::-webkit-scrollbar-track { background: transparent; }
@@ -188,7 +185,6 @@
 </head>
 <body class="p-2 md:p-4 lg:p-6 min-h-screen flex flex-col lg:h-screen lg:overflow-hidden">
 
-    <!-- HEADER TOP BANNER -->
     <header class="w-full shrink-0 mb-4 lg:mb-6">
         <div class="glass-panel p-4 md:p-6 flex flex-col md:flex-row items-center justify-between gap-6 border-b-8 border-blue-600/30">
             <div class="flex items-center gap-5">
@@ -216,10 +212,8 @@
         </div>
     </header>
 
-    <!-- MAIN INTERFACE WRAPPER -->
     <div class="flex-1 flex flex-col lg:flex-row gap-4 lg:gap-6 min-h-0">
         
-        <!-- SIDEBAR: CONTROLS -->
         <aside class="w-full lg:w-[360px] shrink-0 flex flex-col min-h-0 z-30">
             <div class="glass-panel p-5 flex flex-col flex-1 min-h-0">
                 <div class="flex items-center justify-between mb-6 shrink-0">
@@ -232,16 +226,8 @@
                     <button id="toggleMobileMenu" class="lg:hidden text-xs font-bold bg-slate-800 px-4 py-2 rounded-xl border-2 border-slate-700 text-blue-400 uppercase">Settings</button>
                 </div>
 
-                <!-- Independent Scroll Sidebar -->
                 <div id="sideContent" class="space-y-6 lg:flex-1 lg:overflow-y-auto pr-2 pb-4">
                     <div class="space-y-4">
-                        <div>
-                            <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest block mb-2">Cooldown Speed</label>
-                            <div class="relative">
-                                <input type="number" id="speed" step="0.01" class="input-box">
-                                <span class="absolute right-4 top-3.5 text-xs text-blue-500/50 font-game">SEC</span>
-                            </div>
-                        </div>
                         <div>
                             <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest block mb-2">Rune Bulk</label>
                             <input type="text" id="bulk" class="input-box">
@@ -250,19 +236,31 @@
                             <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest block mb-2">Rune Luck (x)</label>
                             <input type="text" id="luck" class="input-box">
                         </div>
+                        <div>
+                            <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest block mb-2">Cooldown Speed</label>
+                            <div class="relative">
+                                <input type="number" id="speed" step="0.01" class="input-box">
+                                <span class="absolute right-4 top-3.5 text-xs text-blue-500/50 font-game">SEC</span>
+                            </div>
+                        </div>
                     </div>
 
-                    <!-- Target Estimation Box -->
                     <div class="bg-blue-600/10 p-5 rounded-2xl border-2 border-blue-500/30 shadow-inner">
                         <label class="text-[10px] font-black text-blue-400 uppercase tracking-widest block mb-3">Custom Target</label>
                         <input type="text" id="target" class="input-box mb-4 border-blue-500/20">
+                        
+                        <label class="text-[10px] font-black text-blue-400 uppercase tracking-widest block mb-3">Custom ETA % (1-99)</label>
+                        <div class="relative mb-4">
+                            <input type="number" id="customPercent" min="1" max="99" placeholder="Base (63%)" class="input-box border-blue-500/20 pr-10">
+                            <span class="absolute right-4 top-3.5 text-xs text-blue-500/50 font-game">%</span>
+                        </div>
+
                         <div class="flex justify-between items-center border-t border-blue-500/20 pt-3">
                             <span class="text-[9px] text-slate-500 font-bold uppercase tracking-tighter">Required Time</span>
                             <div id="customEta" class="text-xl font-game text-blue-400">--</div>
                         </div>
                     </div>
 
-                    <!-- Multipliers -->
                     <div class="space-y-3 pb-2">
                         <label class="text-[10px] font-black text-purple-400 uppercase tracking-widest block mb-1 border-b border-purple-500/20 pb-1 flex items-center gap-2">
                             <i class="fas fa-flask"></i> Potions (1.5x)
@@ -289,14 +287,24 @@
                             </label>
                         </div>
                     </div>
+
+                    <div class="space-y-3 pb-2 mt-2">
+                        <label class="text-[10px] font-black text-blue-400 uppercase tracking-widest block mb-1 border-b border-blue-500/20 pb-1 flex items-center gap-2">
+                            <i class="fas fa-eye-slash"></i> UI Filters
+                        </label>
+                        <div class="flex justify-between items-center bg-slate-800/30 p-3 rounded-xl border border-slate-700">
+                            <span class="text-xs font-bold text-slate-300">Hide Low Tiers (Up to Mythical)</span>
+                            <label class="relative inline-flex items-center cursor-pointer">
+                                <input type="checkbox" id="hideLowTiers" class="sr-only peer">
+                                <div class="toggle-btn"><div class="toggle-dot"></div></div>
+                            </label>
+                        </div>
+                    </div>
                 </div>
             </div>
         </aside>
 
-        <!-- RIGHT PANEL: TOOLBAR & RUNE GRID -->
         <main class="flex-1 flex flex-col min-h-0">
-            
-            <!-- Toolbar -->
             <div class="flex flex-col sm:flex-row gap-3 mb-4 shrink-0 bg-slate-950/50 p-2 rounded-xl lg:bg-transparent lg:p-0">
                 <div class="relative flex-1">
                     <i class="fas fa-search absolute left-4 top-3.5 text-slate-500"></i>
@@ -312,29 +320,23 @@
                 </div>
             </div>
 
-            <!-- Scrollable Grid Wrapper -->
             <div class="lg:flex-1 lg:overflow-y-auto pr-2 pb-6">
                 <div id="runesGrid" class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-4">
-                    <!-- Cards via JS -->
-                </div>
+                    </div>
 
-                <!-- No Results UI -->
                 <div id="noResults" class="hidden flex-col items-center justify-center text-slate-700/50 py-20">
                     <i class="fas fa-ghost text-7xl mb-6 opacity-20"></i>
                     <h3 class="text-xl font-game uppercase tracking-[0.2em]">No Runes Found</h3>
                 </div>
                 
-                <!-- RNG Disclaimer Banner (End of Website) -->
+                <!-- RNG Disclaimer Banner (Moved back under Rune Cards) -->
                 <div class="mt-8 w-full shrink-0 bg-[#0a1220] border-2 border-[#1e3a5f] rounded-xl p-4 sm:p-5 flex flex-col sm:flex-row items-center sm:items-start gap-4 sm:gap-6 shadow-lg relative overflow-hidden">
-                    <!-- Subtle background gradient -->
                     <div class="absolute inset-0 bg-gradient-to-r from-[#172b4d]/50 to-transparent pointer-events-none"></div>
                     
-                    <!-- Premium Game-Style Icon Box -->
                     <div class="bg-[#122540] p-3 sm:p-4 rounded-xl shrink-0 border-2 border-[#22406b] relative z-10 flex items-center justify-center shadow-[inset_0_0_15px_rgba(59,130,246,0.15)]">
                         <i class="fas fa-dice text-[#5ea2ff] text-2xl sm:text-3xl opacity-90" style="filter: drop-shadow(0 0 10px rgba(94, 162, 255, 0.7));"></i>
                     </div>
                     
-                    <!-- Text Content -->
                     <div class="relative z-10 flex-1 text-center sm:text-left">
                         <div class="text-[#5ea2ff] uppercase font-game tracking-wide text-lg sm:text-xl mb-1.5 leading-none" style="text-shadow: 0 0 15px rgba(94,162,250,0.6), 0 0 5px rgba(94,162,250,0.8);">
                             RNG DISCLAIMER:
@@ -344,9 +346,14 @@
                         </div>
                     </div>
                 </div>
+                
+                <!-- Bottom spacing for clear scroll -->
+                <div class="h-6 w-full shrink-0"></div>
             </div>
         </main>
     </div>
+
+    <!-- Removed global footer from here -->
 
     <script>
         // --- DATA & UTILITIES ---
@@ -364,13 +371,11 @@
         const categoryOrder = ["Coin Rune", "Nature Rune", "Cash Rune", "Town Rune"];
         const tierOrder = ["Common", "Rare", "Epic", "Legendary", "Mythical", "Secret", "Celestial", "Transcendents"];
 
-        // Hex to RGB logic
         function hexToRgb(hex) {
             const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
             return result ? `${parseInt(result[1], 16)}, ${parseInt(result[2], 16)}, ${parseInt(result[3], 16)}` : '255, 255, 255';
         }
 
-        // Colors setup for categories and tiers
         function getCategoryColor(type) {
             if(type === "Coin Rune") return "#3cf03c"; 
             if(type === "Nature Rune") return "#fff021"; 
@@ -388,32 +393,28 @@
         }
 
         function getTierColor(tier) {
-            if(tier === "Common") return "#4b5563"; // Solid Flat Dark Grey
-            if(tier === "Rare") return "#22d3ee"; // Light Cyan
-            if(tier === "Epic") return "#e879f9"; // Light Purple/Pink
-            if(tier === "Legendary") return "#facc15"; // Light Gold
+            if(tier === "Common") return "#4b5563"; 
+            if(tier === "Rare") return "#22d3ee"; 
+            if(tier === "Epic") return "#e879f9"; 
+            if(tier === "Legendary") return "#facc15"; 
             if(tier === "Mythical") return "#ef4444"; 
             if(tier === "Secret") return "#71717a"; 
             if(tier === "Celestial") return "#8b5cf6"; 
-            if(tier === "Transcendents") return "#f8fafc"; // Pure White/Silver Glow
+            if(tier === "Transcendents") return "#f8fafc"; 
             return "#ffffff";
         }
 
         function getTierBackground(tierColor, tier) {
-            // Sirf Common card pura dark/black rahega
             if(tier === 'Common') return ['#111827', '#0B0F19']; 
             if(tier === 'Secret') return ['#000000', '#0a0a0a'];
             if(tier === 'Celestial') return ['#1e1b4b', '#0f172a']; 
             if(tier === 'Transcendents') return ['#334155', '#020617']; 
             
-            // Rare, Epic, Legendary, Mythical ke andar halka light color add kar diya (Tint)
             const rgb = hexToRgb(tierColor === "#000000" ? "#1a1a1a" : tierColor);
             return [`rgba(${rgb}, 0.18)`, `rgba(${rgb}, 0.04)`];
         }
 
-        // Updated Rune Data
         const runeData = [
-            // COIN RUNES
             { name: "Rusty", type: "Coin Rune", tier: "Common", chance: "2", raw: "2", stats: ["x10 Bronze Coin (Max)"] },
             { name: "Pure", type: "Coin Rune", tier: "Rare", chance: "5", raw: "5", stats: ["x15 Bronze Coin (Max)"] },
             { name: "Luster", type: "Coin Rune", tier: "Epic", chance: "10", raw: "10", stats: ["x20 Bronze Coin (Max)", "x5 Silver Coin (Max)"] },
@@ -424,7 +425,6 @@
             { name: "Vault Of Infinity", type: "Coin Rune", tier: "Celestial", chance: "85m", raw: "85m", stats: ["x100 Bronze Coin (Max)", "x20 Silver Coin (Max)", "x4 Gold Coin (Max)", "+0.5 Rune Luck (Max)", "+4 Rune Bulk (Max)"] },
             { name: "Golden Paradox", type: "Coin Rune", tier: "Transcendents", chance: "750m", raw: "750m", stats: ["x200 Bronze Coin (Max)", "x40 Silver Coin (Max)", "x8 Gold Coin (Max)", "+1.5 Rune Luck (Max)", "+12 Rune Bulk (Max)"] },
             
-            // NATURE RUNES
             { name: "Sprout", type: "Nature Rune", tier: "Common", chance: "2", raw: "2", stats: ["x25 Bronze Coin (Max)", "x5 Silver Coin (Max)", "x1 Gold Coin (Max)"] },
             { name: "Thorn", type: "Nature Rune", tier: "Rare", chance: "4", raw: "4", stats: ["x30 Bronze Coin (Max)", "x6 Silver Coin (Max)", "x1.5 Gold Coin (Max)"] },
             { name: "Verdant", type: "Nature Rune", tier: "Epic", chance: "10", raw: "10", stats: ["x40 Bronze Coin (Max)", "x8 Silver Coin (Max)", "x2 Gold Coin (Max)"] },
@@ -435,7 +435,6 @@
             { name: "Verdant Nexus", type: "Nature Rune", tier: "Celestial", chance: "150m", raw: "150m", stats: ["x400 Bronze Coin (Max)", "x80 Silver Coin (Max)", "x16 Gold Coin (Max)", "+0.7 Rune Luck (Max)", "+6 Rune Bulk (Max)"] },
             { name: "Earthwarden", type: "Nature Rune", tier: "Transcendents", chance: "900m", raw: "900m", stats: ["x800 Bronze Coin (Max)", "x160 Silver Coin (Max)", "x32 Gold Coin (Max)", "+1.5 Rune Luck (Max)", "+12 Rune Bulk (Max)"] },
 
-            // CASH RUNES
             { name: "Loose Change", type: "Cash Rune", tier: "Common", chance: "2", raw: "2", stats: ["x80 Basic Cash (Max)"] },
             { name: "Paycheck", type: "Cash Rune", tier: "Rare", chance: "5", raw: "5", stats: ["x100 Basic Cash (Max)"] },
             { name: "Banknote", type: "Cash Rune", tier: "Epic", chance: "25", raw: "25", stats: ["x120 Basic Cash (Max)", "x24 Premium Cash (Max)"] },
@@ -446,7 +445,6 @@
             { name: "Monopoly", type: "Cash Rune", tier: "Celestial", chance: "44.99m", raw: "44.99m", stats: ["x400 Basic Cash (Max)", "x80 Premium Cash (Max)", "x16 Deluxe Cash (Max)", "+3 Rune Bulk (Max)", "+0.5 Rune Luck (Max)"] },
             { name: "Supreme Treasury", type: "Cash Rune", tier: "Transcendents", chance: "999.99m", raw: "999.99m", stats: ["x1.6k Basic Cash (Max)", "x320 Premium Cash (Max)", "x80 Deluxe Cash (Max)", "+12 Rune Bulk (Max)", "+2 Rune Luck (Max)"] },
 
-            // TOWN RUNES
             { name: "Kiosk", type: "Town Rune", tier: "Common", chance: "2", raw: "2", stats: ["x640 Basic Cash (Max)"] },
             { name: "Apartment", type: "Town Rune", tier: "Rare", chance: "6", raw: "6", stats: ["x800 Basic Cash (Max)"] },
             { name: "House", type: "Town Rune", tier: "Epic", chance: "35", raw: "35", stats: ["x960 Basic Cash (Max)", "x192 Premium Cash (Max)"] },
@@ -459,8 +457,18 @@
         ]; 
 
         window.sortConfig = { mode: 'category', direction: 'asc' };
+        window.pinnedRunes = new Set(); 
 
-        // Math Logic
+        window.togglePin = function(name, e) {
+            e.stopPropagation(); 
+            if (window.pinnedRunes.has(name)) {
+                window.pinnedRunes.delete(name);
+            } else {
+                window.pinnedRunes.add(name);
+            }
+            window.calculate(); 
+        };
+
         function parseValue(str) {
             if (!str) return 0;
             str = str.toString().toLowerCase().trim();
@@ -500,7 +508,8 @@
         }
 
         window.calculate = function() {
-            const speedVal = parseFloat(document.getElementById('speed').value);
+            const speedInput = document.getElementById('speed').value;
+            const speedVal = speedInput !== '' ? parseFloat(speedInput) : 0.15; // Safe default
             const bulkVal = parseValue(document.getElementById('bulk').value);
             const luckVal = parseValue(document.getElementById('luck').value);
             const targetVal = parseValue(document.getElementById('target').value);
@@ -511,16 +520,25 @@
 
             let finalBulk = bulkVal * bulkBoost;
             let finalLuck = luckVal * luckBoost;
-            let finalSpeed = (speedVal || 0.15) / speedBoost;
+            let finalSpeed = speedVal / speedBoost;
 
-            const rps = finalBulk / (finalSpeed || 1);
+            const rps = finalBulk / (finalSpeed || 1); // Avoid division by zero
             document.getElementById('effectiveRPS').innerText = formatValue(rps);
 
             const totalPower = rps * finalLuck;
             const etaEl = document.getElementById('customEta');
+            
+            const customPercentInput = document.getElementById('customPercent').value;
+            const customPercentVal = customPercentInput !== '' ? parseFloat(customPercentInput) : NaN;
 
             if (totalPower > 0 && targetVal > 0) {
-                const sec = targetVal / totalPower;
+                let sec = targetVal / totalPower;
+                
+                if (!isNaN(customPercentVal) && customPercentVal > 0 && customPercentVal < 100) {
+                    const probabilityMultiplier = -Math.log(1 - (customPercentVal / 100));
+                    sec = sec * probabilityMultiplier;
+                }
+
                 etaEl.innerText = formatTime(sec);
                 etaEl.style.color = sec > 3600 ? '#f87171' : (sec > 300 ? '#fbbf24' : '#4ade80');
             } else {
@@ -564,21 +582,29 @@
             }
         }
 
-        // Render Cards UI
         function updateGrid(power) {
             const grid = document.getElementById('runesGrid');
             const noRes = document.getElementById('noResults');
             const searchInput = document.getElementById('runeSearch');
             const searchTerm = searchInput ? searchInput.value.toLowerCase() : '';
             
-            let filtered = runeData.filter(rune => 
-                rune.name.toLowerCase().includes(searchTerm) || 
-                rune.type.toLowerCase().includes(searchTerm) ||
-                rune.tier.toLowerCase().includes(searchTerm)
-            );
+            const hideLowInput = document.getElementById('hideLowTiers');
+            const hideLow = hideLowInput ? hideLowInput.checked : false;
+            const lowTierList = ['Common', 'Rare', 'Epic', 'Legendary', 'Mythical'];
 
-            // Sorting Logic
+            let filtered = runeData.filter(rune => {
+                const matchSearch = rune.name.toLowerCase().includes(searchTerm) || 
+                                    rune.type.toLowerCase().includes(searchTerm) ||
+                                    rune.tier.toLowerCase().includes(searchTerm);
+                const matchTier = hideLow ? !lowTierList.includes(rune.tier) : true;
+                return matchSearch && matchTier;
+            });
+
             filtered.sort((a, b) => {
+                const pinA = window.pinnedRunes.has(a.name) ? 1 : 0;
+                const pinB = window.pinnedRunes.has(b.name) ? 1 : 0;
+                if (pinA !== pinB) return pinB - pinA; 
+
                 if (window.sortConfig.mode === 'category') {
                     const catA = categoryOrder.indexOf(a.type);
                     const catB = categoryOrder.indexOf(b.type);
@@ -614,11 +640,13 @@
             filtered.forEach(rune => {
                 const sec = power > 0 ? parseValue(rune.raw) / power : 0;
                 
-                // RNG probability math
                 const eta50 = formatTime(sec * 0.6931);
-                const eta = formatTime(sec); // 63.2%
+                const eta = formatTime(sec); 
                 const eta75 = formatTime(sec * 1.3863);
                 const eta99 = formatTime(sec * 4.6052);
+
+                const isPinned = window.pinnedRunes.has(rune.name);
+                const displayCategory = isPinned && window.sortConfig.mode === 'category' ? 'Pinned Runes' : rune.type;
 
                 const [typeColor, iconClass] = getCardStyle(rune.type);
                 const catRgb = hexToRgb(typeColor);
@@ -627,20 +655,33 @@
                 const tierRgb = hexToRgb(tierColor);
                 const [bgDark, bgLight] = getTierBackground(tierColor, rune.tier);
                 
-                // Category Header UI
-                if (window.sortConfig.mode === 'category' && rune.type !== currentCategory) {
-                    currentCategory = rune.type;
-                    const catCount = filtered.filter(r => r.type === currentCategory).length;
+                if (window.sortConfig.mode === 'category' && displayCategory !== currentCategory) {
+                    currentCategory = displayCategory;
                     
+                    let headerColor, headerRgb, headerIcon;
+                    let catCount = 0;
+                    
+                    if (displayCategory === 'Pinned Runes') {
+                        headerColor = '#facc15'; 
+                        headerRgb = '250, 204, 21';
+                        headerIcon = 'fa-star';
+                        catCount = filtered.filter(r => window.pinnedRunes.has(r.name)).length;
+                    } else {
+                        headerColor = typeColor;
+                        headerRgb = catRgb;
+                        headerIcon = iconClass;
+                        catCount = filtered.filter(r => r.type === displayCategory && !window.pinnedRunes.has(r.name)).length;
+                    }
+
                     const header = document.createElement('div');
                     header.className = 'col-span-full mt-4 mb-2';
                     header.innerHTML = `
-                        <div class="category-header" style="--cat-color: ${typeColor}; --cat-color-rgb: ${catRgb};">
+                        <div class="category-header" style="--cat-color: ${headerColor}; --cat-color-rgb: ${headerRgb};">
                             <div class="flex items-center gap-3 md:gap-4 relative z-10">
-                                <div class="w-12 h-12 rounded-xl flex items-center justify-center text-2xl shadow-lg border-2" style="background: rgba(${catRgb}, 0.15); color: ${typeColor}; border-color: rgba(${catRgb}, 0.3);">
-                                    <i class="fas ${iconClass}"></i>
+                                <div class="w-12 h-12 rounded-xl flex items-center justify-center text-2xl shadow-lg border-2" style="background: rgba(${headerRgb}, 0.15); color: ${headerColor}; border-color: rgba(${headerRgb}, 0.3);">
+                                    <i class="fas ${headerIcon}"></i>
                                 </div>
-                                <h3 class="text-2xl md:text-3xl font-game tracking-widest uppercase" style="color: #fff; text-shadow: 0 2px 10px rgba(${catRgb}, 0.8), 0 2px 4px rgba(0,0,0,0.8);">
+                                <h3 class="text-2xl md:text-3xl font-game tracking-widest uppercase" style="color: #fff; text-shadow: 0 2px 10px rgba(${headerRgb}, 0.8), 0 2px 4px rgba(0,0,0,0.8);">
                                     ${currentCategory}
                                 </h3>
                             </div>
@@ -655,7 +696,6 @@
 
                 const card = document.createElement('div');
                 
-                // Class Assignments for visuals
                 let specialClass = '';
                 if (['Common', 'Rare', 'Epic', 'Legendary', 'Mythical'].includes(rune.tier)) {
                     specialClass = 'basic-card';
@@ -663,9 +703,9 @@
                     specialClass = 'premium-shine';
                 }
 
-                card.className = `rune-card p-4 cursor-pointer ${specialClass}`;
-                card.style.setProperty('--tier-color', tierColor); 
-                card.style.setProperty('--tier-color-rgb', tierRgb); 
+                card.className = `rune-card p-4 cursor-pointer ${specialClass} ${isPinned ? 'border-yellow-400 shadow-[0_0_15px_rgba(250,204,21,0.2)]' : ''}`;
+                card.style.setProperty('--tier-color', isPinned ? '#facc15' : tierColor); 
+                card.style.setProperty('--tier-color-rgb', isPinned ? '250,204,21' : tierRgb); 
                 card.style.setProperty('--tier-bg-dark', bgDark); 
                 card.style.setProperty('--tier-bg-light', bgLight); 
                 
@@ -673,32 +713,31 @@
                     document.getElementById('target').value = rune.raw; 
                     window.calculate();
                 };
+
+                let pinButtonUI = '';
+                let paddingRight = ''; 
+                if (['Secret', 'Celestial', 'Transcendents'].includes(rune.tier)) {
+                    paddingRight = 'pr-7'; 
+                    pinButtonUI = `
+                        <button class="absolute -top-2 -right-2 p-2 z-20 hover:scale-110 transition-transform" onclick="window.togglePin('${rune.name.replace(/'/g, "\\'")}', event)" title="Pin Rune">
+                            <i class="fas fa-star text-xl drop-shadow-md ${isPinned ? 'text-yellow-400 drop-shadow-[0_0_10px_rgba(250,204,21,0.8)]' : 'text-slate-500/30 hover:text-yellow-400/80'}"></i>
+                        </button>
+                    `;
+                }
                 
                 let tierTextUI = '';
                 if (rune.tier === 'Common') {
-                    tierTextUI = `<div class="text-[11px] font-bold uppercase tracking-tight text-slate-500">
-                        ${rune.tier}
-                    </div>`;
+                    tierTextUI = `<div class="text-[11px] font-bold uppercase tracking-tight text-slate-500">${rune.tier}</div>`;
                 } else if (['Rare', 'Epic', 'Legendary', 'Mythical'].includes(rune.tier)) {
-                    tierTextUI = `<div class="text-[11px] font-bold uppercase tracking-widest" style="color: ${tierColor};">
-                        ${rune.tier}
-                    </div>`;
+                    tierTextUI = `<div class="text-[11px] font-bold uppercase tracking-widest" style="color: ${tierColor};">${rune.tier}</div>`;
                 } else if (rune.tier === 'Secret') {
-                    tierTextUI = `<div class="text-[13px] font-game uppercase tracking-widest" style="background: linear-gradient(to bottom, #94a3b8 0%, #334155 50%, #000000 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; -webkit-text-stroke: 1px #000000; filter: drop-shadow(0 2px 3px rgba(0,0,0,0.9)) drop-shadow(0 0 2px rgba(0,0,0,1));">
-                        ${rune.tier}
-                    </div>`;
+                    tierTextUI = `<div class="text-[13px] font-game uppercase tracking-widest" style="background: linear-gradient(to bottom, #94a3b8 0%, #334155 50%, #000000 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; -webkit-text-stroke: 1px #000000; filter: drop-shadow(0 2px 3px rgba(0,0,0,0.9)) drop-shadow(0 0 2px rgba(0,0,0,1));">${rune.tier}</div>`;
                 } else if (rune.tier === 'Transcendents') {
-                    tierTextUI = `<div class="text-[12px] font-game uppercase tracking-widest" style="background: linear-gradient(to bottom, #ffffff, #94a3b8, #cbd5e1); -webkit-background-clip: text; -webkit-text-fill-color: transparent; filter: drop-shadow(0 0 10px rgba(255,255,255,0.8)); text-shadow: 0 0 5px rgba(255,255,255,0.5);">
-                        ${rune.tier}
-                    </div>`;
+                    tierTextUI = `<div class="text-[12px] font-game uppercase tracking-widest" style="background: linear-gradient(to bottom, #ffffff, #94a3b8, #cbd5e1); -webkit-background-clip: text; -webkit-text-fill-color: transparent; filter: drop-shadow(0 0 10px rgba(255,255,255,0.8)); text-shadow: 0 0 5px rgba(255,255,255,0.5);">${rune.tier}</div>`;
                 } else if (rune.tier === 'Celestial') {
-                    tierTextUI = `<div class="text-[12px] font-game uppercase tracking-widest animate-pulse" style="background: linear-gradient(90deg, #00ffff 0%, #cc00ff 50%, #00ffff 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; filter: drop-shadow(0 0 8px rgba(204,0,255,0.7)) drop-shadow(0 0 4px rgba(0,255,255,0.5)); -webkit-text-stroke: 0.5px rgba(255,255,255,0.2);">
-                        ${rune.tier}
-                    </div>`;
+                    tierTextUI = `<div class="text-[12px] font-game uppercase tracking-widest animate-pulse" style="background: linear-gradient(90deg, #00ffff 0%, #cc00ff 50%, #00ffff 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; filter: drop-shadow(0 0 8px rgba(204,0,255,0.7)) drop-shadow(0 0 4px rgba(0,255,255,0.5)); -webkit-text-stroke: 0.5px rgba(255,255,255,0.2);">${rune.tier}</div>`;
                 } else {
-                    tierTextUI = `<div class="text-[11px] font-game uppercase tracking-wider" style="color: ${tierColor}; text-shadow: 0 0 10px ${tierColor}80">
-                        ${rune.tier}
-                    </div>`;
+                    tierTextUI = `<div class="text-[11px] font-game uppercase tracking-wider" style="color: ${tierColor}; text-shadow: 0 0 10px ${tierColor}80">${rune.tier}</div>`;
                 }
 
                 let runeNameUI = `<h4 class="text-2xl font-game text-white mb-3 truncate" style="text-shadow: 0 2px 4px rgba(0,0,0,0.5)">${rune.name}</h4>`;
@@ -706,16 +745,17 @@
                 if (['Common', 'Rare', 'Epic', 'Legendary', 'Mythical'].includes(rune.tier)) {
                     runeNameUI = `<h4 class="text-xl sm:text-2xl font-bold text-slate-200 mb-3 truncate">${rune.name}</h4>`;
                 } else if (rune.tier === 'Secret') {
-                    runeNameUI = `<h4 class="text-2xl font-game mb-3 truncate" style="background: linear-gradient(to bottom, #cbd5e1 0%, #475569 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.9)); -webkit-text-stroke: 0.5px #000000;">${rune.name}</h4>`;
+                    runeNameUI = `<h4 class="text-2xl font-game mb-3 truncate ${paddingRight}" style="background: linear-gradient(to bottom, #cbd5e1 0%, #475569 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.9)); -webkit-text-stroke: 0.5px #000000;">${rune.name}</h4>`;
                 } else if (rune.tier === 'Celestial') {
-                    runeNameUI = `<h4 class="text-2xl font-game mb-3 truncate" style="background: linear-gradient(90deg, #00ffff 0%, #cc00ff 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.8));">${rune.name}</h4>`;
+                    runeNameUI = `<h4 class="text-2xl font-game mb-3 truncate ${paddingRight}" style="background: linear-gradient(90deg, #00ffff 0%, #cc00ff 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.8));">${rune.name}</h4>`;
                 } else if (rune.tier === 'Transcendents') {
-                    runeNameUI = `<h4 class="text-2xl font-game mb-3 truncate" style="background: linear-gradient(to bottom, #ffffff 30%, #94a3b8 70%, #ffffff 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; filter: drop-shadow(0 2px 8px rgba(0,0,0,1));">${rune.name}</h4>`;
+                    runeNameUI = `<h4 class="text-2xl font-game mb-3 truncate ${paddingRight}" style="background: linear-gradient(to bottom, #ffffff 30%, #94a3b8 70%, #ffffff 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; filter: drop-shadow(0 2px 8px rgba(0,0,0,1));">${rune.name}</h4>`;
                 }
 
                 card.innerHTML = `
                     <div class="relative z-10">
-                        <div class="flex justify-between items-start mb-2">
+                        ${pinButtonUI}
+                        <div class="flex justify-between items-start mb-2 ${paddingRight}">
                             <div class="text-[10px] font-black uppercase tracking-widest px-2 py-0.5 rounded border border-white/10 flex items-center gap-1.5" style="background: rgba(${catRgb}, 0.15); color: ${typeColor};">
                                 <i class="fas ${iconClass}"></i> ${rune.type}
                             </div>
@@ -755,7 +795,6 @@
             });
         }
 
-        // App initialization
         document.addEventListener('DOMContentLoaded', () => {
             const toggle = document.getElementById('toggleMobileMenu');
             const side = document.getElementById('sideContent');
@@ -764,15 +803,16 @@
                 toggle.innerText = side.classList.contains('hidden') ? 'Settings' : 'Hide Settings';
             };
             
-            // Events attaching
-            ['speed', 'bulk', 'luck', 'target', 'runeSearch'].forEach(id => {
+            ['speed', 'bulk', 'luck', 'target', 'customPercent', 'runeSearch'].forEach(id => {
                 const el = document.getElementById(id);
                 if(el) el.addEventListener('input', window.calculate);
             });
-            ['bulk2x', 'luck2x', 'speed2x'].forEach(id => {
+            
+            ['bulk2x', 'luck2x', 'speed2x', 'hideLowTiers'].forEach(id => {
                 const el = document.getElementById(id);
                 if(el) el.addEventListener('change', window.calculate);
             });
+            
             document.getElementById('modeTotal').addEventListener('click', window.setModeCategory);
             document.getElementById('modeEta').addEventListener('click', window.setModeEta);
             
