@@ -368,7 +368,7 @@
             { val: 1e57, sym: 'ocde' }, { val: 1e60, sym: 'node' }, { val: 1e63, sym: 'vgde' }
         ];
 
-        const categoryOrder = ["Coin Rune", "Nature Rune", "Cash Rune", "Town Rune"];
+        const categoryOrder = ["Coin Rune", "Nature Rune", "Cash Rune", "Town Rune", "Ore Rune", "Industrialize Rune"];
         const tierOrder = ["Common", "Rare", "Epic", "Legendary", "Mythical", "Secret", "Celestial", "Transcendents"];
 
         function hexToRgb(hex) {
@@ -381,6 +381,8 @@
             if(type === "Nature Rune") return "#fff021"; 
             if(type === "Cash Rune") return "#21b1ff"; 
             if(type === "Town Rune") return "#ff128a"; 
+            if(type === "Ore Rune") return "#d97706"; // Distinct Bronze/Amber color
+            if(type === "Industrialize Rune") return "#ff4500"; // Fiery Bright Orange-Red color
             return "#94a3b8"; 
         }
 
@@ -389,6 +391,8 @@
             if(type === "Nature Rune") return [getCategoryColor("Nature Rune"), "fa-leaf"]; 
             if(type === "Cash Rune") return [getCategoryColor("Cash Rune"), "fa-money-bill-wave"];
             if(type === "Town Rune") return [getCategoryColor("Town Rune"), "fa-building"];
+            if(type === "Ore Rune") return [getCategoryColor("Ore Rune"), "fa-cube"];
+            if(type === "Industrialize Rune") return [getCategoryColor("Industrialize Rune"), "fa-industry"];
             return [getCategoryColor("Default"), "fa-question"];
         }
 
@@ -424,6 +428,7 @@
             { name: "Wealthbound", type: "Coin Rune", tier: "Celestial", chance: "10m", raw: "10m", stats: ["x50 Bronze Coin (Max)", "x15 Silver Coin (Max)", "x3 Gold Coin (Max)", "+0.2 Rune Luck (Max)", "+2 Rune Bulk (Max)"] },
             { name: "Vault Of Infinity", type: "Coin Rune", tier: "Celestial", chance: "85m", raw: "85m", stats: ["x100 Bronze Coin (Max)", "x20 Silver Coin (Max)", "x4 Gold Coin (Max)", "+0.5 Rune Luck (Max)", "+4 Rune Bulk (Max)"] },
             { name: "Golden Paradox", type: "Coin Rune", tier: "Transcendents", chance: "750m", raw: "750m", stats: ["x200 Bronze Coin (Max)", "x40 Silver Coin (Max)", "x8 Gold Coin (Max)", "+1.5 Rune Luck (Max)", "+12 Rune Bulk (Max)"] },
+            { name: "Infinity Coins", type: "Coin Rune", tier: "Transcendents", chance: "4.5b", raw: "4.5b", stats: ["x400 Bronze Coin (Max)", "x80 Silver Coin (Max)", "x16 Gold Coin (Max)", "+2 Rune Luck (Max)", "+18 Rune Bulk (Max)"] },
             
             { name: "Sprout", type: "Nature Rune", tier: "Common", chance: "2", raw: "2", stats: ["x25 Bronze Coin (Max)", "x5 Silver Coin (Max)", "x1 Gold Coin (Max)"] },
             { name: "Thorn", type: "Nature Rune", tier: "Rare", chance: "4", raw: "4", stats: ["x30 Bronze Coin (Max)", "x6 Silver Coin (Max)", "x1.5 Gold Coin (Max)"] },
@@ -434,7 +439,9 @@
             { name: "Sunspire", type: "Nature Rune", tier: "Celestial", chance: "25m", raw: "25m", stats: ["x200 Bronze Coin (Max)", "x40 Silver Coin (Max)", "x8 Gold Coin (Max)", "+0.3 Rune Luck (Max)", "+3 Rune Bulk (Max)"] },
             { name: "Verdant Nexus", type: "Nature Rune", tier: "Celestial", chance: "150m", raw: "150m", stats: ["x400 Bronze Coin (Max)", "x80 Silver Coin (Max)", "x16 Gold Coin (Max)", "+0.7 Rune Luck (Max)", "+6 Rune Bulk (Max)"] },
             { name: "Earthwarden", type: "Nature Rune", tier: "Transcendents", chance: "900m", raw: "900m", stats: ["x800 Bronze Coin (Max)", "x160 Silver Coin (Max)", "x32 Gold Coin (Max)", "+1.5 Rune Luck (Max)", "+12 Rune Bulk (Max)"] },
+            { name: "Sunshine", type: "Nature Rune", tier: "Transcendents", chance: "6b", raw: "6b", stats: ["x1.6k Bronze Coin (Max)", "x320 Silver Coin (Max)", "x64 Gold Coin (Max)", "+2 Rune Luck (Max)", "+18 Rune Bulk (Max)"] },
 
+            // CASH RUNES
             { name: "Loose Change", type: "Cash Rune", tier: "Common", chance: "2", raw: "2", stats: ["x80 Basic Cash (Max)"] },
             { name: "Paycheck", type: "Cash Rune", tier: "Rare", chance: "5", raw: "5", stats: ["x100 Basic Cash (Max)"] },
             { name: "Banknote", type: "Cash Rune", tier: "Epic", chance: "25", raw: "25", stats: ["x120 Basic Cash (Max)", "x24 Premium Cash (Max)"] },
@@ -444,7 +451,9 @@
             { name: "Omnicash", type: "Cash Rune", tier: "Celestial", chance: "225m", raw: "225m", stats: ["x800 Basic Cash (Max)", "x160 Premium Cash (Max)", "x40 Deluxe Cash (Max)", "+6 Rune Bulk (Max)", "+1 Rune Luck (Max)"] },
             { name: "Monopoly", type: "Cash Rune", tier: "Celestial", chance: "44.99m", raw: "44.99m", stats: ["x400 Basic Cash (Max)", "x80 Premium Cash (Max)", "x16 Deluxe Cash (Max)", "+3 Rune Bulk (Max)", "+0.5 Rune Luck (Max)"] },
             { name: "Supreme Treasury", type: "Cash Rune", tier: "Transcendents", chance: "999.99m", raw: "999.99m", stats: ["x1.6k Basic Cash (Max)", "x320 Premium Cash (Max)", "x80 Deluxe Cash (Max)", "+12 Rune Bulk (Max)", "+2 Rune Luck (Max)"] },
+            { name: "Stock trader", type: "Cash Rune", tier: "Transcendents", chance: "7.5b", raw: "7.5b", stats: ["x3.2k Basic Cash (Max)", "x640 Premium Cash (Max)", "x160 Deluxe Cash (Max)", "+18 Rune Bulk (Max)", "+2.4 Rune Luck (Max)"] },
 
+            // TOWN RUNES
             { name: "Kiosk", type: "Town Rune", tier: "Common", chance: "2", raw: "2", stats: ["x640 Basic Cash (Max)"] },
             { name: "Apartment", type: "Town Rune", tier: "Rare", chance: "6", raw: "6", stats: ["x800 Basic Cash (Max)"] },
             { name: "House", type: "Town Rune", tier: "Epic", chance: "35", raw: "35", stats: ["x960 Basic Cash (Max)", "x192 Premium Cash (Max)"] },
@@ -453,7 +462,30 @@
             { name: "Skyscraper", type: "Town Rune", tier: "Secret", chance: "35k", raw: "35k", stats: ["x1.6k Basic Cash (Max)", "x320 Premium Cash (Max)", "x64 Deluxe Cash (Max)", "+0.05 Rune Luck (Max)"] },
             { name: "Megacity", type: "Town Rune", tier: "Celestial", chance: "65m", raw: "65m", stats: ["x2.4k Basic Cash (Max)", "x480 Premium Cash (Max)", "x96 Deluxe Cash (Max)", "+3 Rune Bulk (Max)", "+0.5 Rune Luck (Max)"] },
             { name: "Global Core", type: "Town Rune", tier: "Celestial", chance: "174.99m", raw: "174.99m", stats: ["x4.8k Basic Cash (Max)", "x960 Premium Cash (Max)", "x192 Deluxe Cash (Max)", "+6 Rune Bulk (Max)", "+1 Rune Luck (Max)"] },
-            { name: "Eternal Kingdom", type: "Town Rune", tier: "Transcendents", chance: "1.25b", raw: "1.25b", stats: ["x9.6k Basic Cash (Max)", "x1.92k Premium Cash (Max)", "x384 Deluxe Cash (Max)", "+12 Rune Bulk (Max)", "+2 Rune Luck (Max)"] }
+            { name: "Eternal Kingdom", type: "Town Rune", tier: "Transcendents", chance: "1.25b", raw: "1.25b", stats: ["x9.6k Basic Cash (Max)", "x1.92k Premium Cash (Max)", "x384 Deluxe Cash (Max)", "+12 Rune Bulk (Max)", "+2 Rune Luck (Max)"] },
+            { name: "Skyline", type: "Town Rune", tier: "Transcendents", chance: "10b", raw: "10b", stats: ["x19.2k Basic Cash (Max)", "x3.84k Premium Cash (Max)", "x768 Deluxe Cash (Max)", "+18 Rune Bulk (Max)", "+2.4 Rune Luck (Max)"] },
+
+            // ORE RUNES
+            { name: "Bauxite", type: "Ore Rune", tier: "Common", chance: "2", raw: "2", stats: ["x50 Stone Nugget (Max)"] },
+            { name: "Zinc", type: "Ore Rune", tier: "Rare", chance: "48", raw: "48", stats: ["x75 Copper Nugget (Max)"] },
+            { name: "Galena", type: "Ore Rune", tier: "Epic", chance: "280", raw: "280", stats: ["x100 Stone Nugget (Max)", "x50 Iron Nugget (Max)"] },
+            { name: "Cinnabar", type: "Ore Rune", tier: "Legendary", chance: "2k", raw: "2k", stats: ["x37.5 Gold (Max)", "x75 Iron (Max)"] },
+            { name: "Scheelite", type: "Ore Rune", tier: "Mythical", chance: "5.2k", raw: "5.2k", stats: ["x25 Emerald (Max)", "x50 Gold (Max)"] },
+            { name: "Xenotime", type: "Ore Rune", tier: "Secret", chance: "280k", raw: "280k", stats: ["x35 Emerald (Max)", "x17.5 Amethyst (Max)", "+1 Rune Bulk (Max)", "+0.1 Rune Luck (Max)"] },
+            { name: "Painite", type: "Ore Rune", tier: "Celestial", chance: "520m", raw: "520m", stats: ["+5 Rune Bulk (Max)", "x12.5 Diamond (Max)", "+1 Rune Luck (Max)", "x25 Amethyst (Max)"] },
+            { name: "Gradidierite", type: "Ore Rune", tier: "Transcendents", chance: "10b", raw: "10b", stats: ["x10 Obsidian (Max)", "x20 Ruby (Max)", "+3 Rune Luck (Max)", "+24 Rune Bulk (Max)"] },
+            { name: "Serendibite", type: "Ore Rune", tier: "Transcendents", chance: "50b", raw: "50b", stats: ["Ores Multiplier", "+4 Rune Luck (Max)", "+40 Rune Bulk (Max)"] },
+
+            // INDUSTRIALIZE RUNES
+            { name: "Ember", type: "Industrialize Rune", tier: "Common", chance: "2", raw: "2", stats: ["x150 Stone (Max)"] },
+            { name: "Anvil", type: "Industrialize Rune", tier: "Rare", chance: "72", raw: "72", stats: ["x225 Copper (Max)"] },
+            { name: "Machine", type: "Industrialize Rune", tier: "Epic", chance: "420", raw: "420", stats: ["x300 Stone (Max)", "x150 Iron (Max)"] },
+            { name: "Conveyor", type: "Industrialize Rune", tier: "Legendary", chance: "3k", raw: "3k", stats: ["x112.5 Gold (Max)", "x225 Iron (Max)"] },
+            { name: "Voltage", type: "Industrialize Rune", tier: "Mythical", chance: "7.8k", raw: "7.8k", stats: ["x75 Emerald (Max)", "x150 Gold (Max)"] },
+            { name: "Refinery", type: "Industrialize Rune", tier: "Secret", chance: "420k", raw: "420k", stats: ["+1 Rune Bulk (Max)", "x105 Emerald (Max)", "+0.2 Rune Luck (Max)", "x52.5 Amethyst (Max)"] },
+            { name: "Infrastructure", type: "Industrialize Rune", tier: "Celestial", chance: "780m", raw: "780m", stats: ["+7 Rune Bulk (Max)", "x37.5 Diamond (Max)", "+1.5 Rune Luck (Max)", "x75 Amethyst (Max)"] },
+            { name: "Titanworks", type: "Industrialize Rune", tier: "Transcendents", chance: "15b", raw: "15b", stats: ["x30 Obsidian (Max)", "x60 Ruby (Max)", "+4 Rune Luck (Max)", "+36 Rune Bulk (Max)"] },
+            { name: "Hyperforge", type: "Industrialize Rune", tier: "Transcendents", chance: "75b", raw: "75b", stats: ["Ores Multiplier", "+5 Rune Luck (Max)", "+45 Rune Bulk"] }
         ]; 
 
         window.sortConfig = { mode: 'category', direction: 'asc' };
